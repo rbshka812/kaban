@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.4.1
+// @version      0.4.2
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -376,30 +376,49 @@
   }
 
   // === Badge inject ===
-  // Some Cybershoke modes use <td>, others use <div>/<span>. Search both, match by trimmed text.
+  // Cybershoke modes render nicks differently:
+  //   - guest: <td> with avatar img + text
+  //   - logged-in: nick is a clickable <a href="/<steamid>">
+  //   - some modes wrap nick in <span> or <div>
+  // Search broadly with normalized matching.
+  function normWhitespace(s) {
+    return (s || '').replace(/\s+/g, ' ').trim();
+  }
   function injectBadge(modal, nick) {
-    const trimNick = nick.trim();
-    const candidates = modal.querySelectorAll('td, div, span');
+    const target = normWhitespace(nick);
+    // Try widest selector first
+    const candidates = modal.querySelectorAll('td, div, span, a, p, button, li');
+    let bestMatch = null;
     for (const el of candidates) {
-      // Avoid containers — only leaf-ish elements whose own text is the nick
-      const ownText = Array.from(el.childNodes)
-        .filter(n => n.nodeType === 3)
-        .map(n => n.textContent || '')
-        .join('')
-        .trim();
-      const fullText = (el.textContent || '').trim();
-      if (ownText === trimNick || fullText === trimNick) {
-        let b = el.querySelector('.csli-badge');
-        if (b) return b;
-        b = document.createElement('span');
-        b.className = 'csli-badge loading';
-        b.textContent = '…';
-        el.appendChild(b);
-        return b;
+      // Own text (text children only, ignores descendants)
+      const ownText = normWhitespace(
+        Array.from(el.childNodes)
+          .filter(n => n.nodeType === 3)
+          .map(n => n.textContent || '')
+          .join('')
+      );
+      const fullText = normWhitespace(el.textContent);
+      if (ownText === target) {
+        // Prefer leaf-ish (only own text matches) — return immediately
+        bestMatch = el;
+        break;
+      }
+      // Fallback: full text matches and element is small enough to be a leaf-ish nick container
+      if (!bestMatch && fullText === target && fullText.length < 64) {
+        bestMatch = el;
       }
     }
-    log('[badge] could not find DOM element for nick:', JSON.stringify(nick));
-    return null;
+    if (!bestMatch) {
+      log('[badge] could not find DOM element for nick:', JSON.stringify(nick));
+      return null;
+    }
+    let b = bestMatch.querySelector('.csli-badge');
+    if (b) return b;
+    b = document.createElement('span');
+    b.className = 'csli-badge loading';
+    b.textContent = '…';
+    bestMatch.appendChild(b);
+    return b;
   }
 
   // === State ===
@@ -521,6 +540,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.4.1 ready.');
+  log('Cybershoke Inventory Live v0.4.2 ready.');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
