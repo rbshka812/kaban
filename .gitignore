@@ -1,0 +1,10 @@
+node_modules/
+.vercel/
+.env
+.env.local
+.DS_Store
+*.log
+
+# Local install/recon artifacts
+.agents/
+skills-lock.json

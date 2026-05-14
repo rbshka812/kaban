@@ -1,0 +1,1049 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e5] [cursor=pointer]:
+        - /url: /ru/
+      - generic [ref=e28]: "12884"
+    - navigation [ref=e10]:
+      - link "Войти через Steam" [ref=e29] [cursor=pointer]:
+        - /url: //auth.cybershoke.net/steam
+  - complementary [ref=e13]:
+    - navigation [ref=e14]:
+      - link [ref=e15] [cursor=pointer]:
+        - /url: /ru/cs2
+      - link [ref=e16] [cursor=pointer]:
+        - /url: /ru/matches
+      - link [ref=e17] [cursor=pointer]:
+        - /url: /ru/premium
+      - link [ref=e18] [cursor=pointer]:
+        - /url: /ru/missions
+      - link [ref=e19] [cursor=pointer]:
+        - /url: /ru/cs2/pickem/astana-2026
+      - link [ref=e20] [cursor=pointer]:
+        - /url: /ru/cs2/leaderboard
+      - link [ref=e21] [cursor=pointer]:
+        - /url: /ru/shop
+      - link [ref=e22] [cursor=pointer]:
+        - /url: /ru/learn
+      - link [ref=e24] [cursor=pointer]:
+        - /url: ""
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: "🎉Pick`Em на CYBERSHOKE! Предугадывай исходы матчей, получай прокрутки в барабане призов и зарабатывай скины!"
+            - link "Поставить пикем!" [ref=e33] [cursor=pointer]:
+              - /url: /ru/cs2/pickem/astana-2026
+          - img [ref=e34] [cursor=pointer]
+        - generic [ref=e36]:
+          - navigation [ref=e37]:
+            - link "Создать лобби" [ref=e38] [cursor=pointer]:
+              - /url: /ru/matches
+              - text: Создать лобби
+              - img [ref=e39]
+            - link "DM" [ref=e42] [cursor=pointer]:
+              - /url: /ru/cs2/servers/dm
+            - link "DUELS" [ref=e43] [cursor=pointer]:
+              - /url: /ru/cs2/servers/duels
+            - link "RETAKE" [ref=e44] [cursor=pointer]:
+              - /url: /ru/cs2/servers/retake
+            - link "RETAKE CARDS" [ref=e45] [cursor=pointer]:
+              - /url: /ru/cs2/servers/retakecards
+            - link "5X5" [ref=e46] [cursor=pointer]:
+              - /url: /ru/cs2/servers/5x5
+            - link "2X2" [ref=e47] [cursor=pointer]:
+              - /url: /ru/cs2/servers/2x2
+            - link "BHOP" [ref=e48] [cursor=pointer]:
+              - /url: /ru/cs2/servers/bhop
+            - link "SURF" [ref=e49] [cursor=pointer]:
+              - /url: /ru/cs2/servers/surf
+            - link "KZ" [ref=e50] [cursor=pointer]:
+              - /url: /ru/cs2/servers/kz
+            - link "PUBLIC" [ref=e51] [cursor=pointer]:
+              - /url: /ru/cs2/servers/public
+            - link "AWP" [ref=e52] [cursor=pointer]:
+              - /url: /ru/cs2/servers/awp
+            - link "DUELS 2X2" [ref=e53] [cursor=pointer]:
+              - /url: /ru/cs2/servers/duels2x2
+            - link "EXECUTE" [ref=e54] [cursor=pointer]:
+              - /url: /ru/cs2/servers/execute
+            - link "CLUTCH" [ref=e55] [cursor=pointer]:
+              - /url: /ru/cs2/servers/clutch
+            - link "PISTOL RETAKE" [ref=e56] [cursor=pointer]:
+              - /url: /ru/cs2/servers/pistolretake
+            - link "ARENA" [ref=e57] [cursor=pointer]:
+              - /url: /ru/cs2/servers/arena
+            - link "MULTICFG" [ref=e58] [cursor=pointer]:
+              - /url: /ru/cs2/servers/multicfgdm
+            - link "PISTOLDM" [ref=e59] [cursor=pointer]:
+              - /url: /ru/cs2/servers/pistoldm
+            - link "HSDM" [ref=e60] [cursor=pointer]:
+              - /url: /ru/cs2/servers/hsdm
+            - link "AWPDM" [ref=e61] [cursor=pointer]:
+              - /url: /ru/cs2/servers/awpdm
+            - link "AIMDM" [ref=e62] [cursor=pointer]:
+              - /url: /ru/cs2/servers/aimdm
+            - link "JAIL" [ref=e63] [cursor=pointer]:
+              - /url: /ru/cs2/servers/jail
+            - link "MANIAC" [ref=e64] [cursor=pointer]:
+              - /url: /ru/cs2/servers/maniac
+            - link "DEATHRUN" [ref=e65] [cursor=pointer]:
+              - /url: /ru/cs2/servers/deathrun
+            - link "MINIGAMES" [ref=e66] [cursor=pointer]:
+              - /url: /ru/cs2/servers/minigames
+            - link "HNS" [ref=e67] [cursor=pointer]:
+              - /url: /ru/cs2/servers/hns
+            - link "SURF COMBAT" [ref=e68] [cursor=pointer]:
+              - /url: /ru/cs2/servers/surfcombat
+            - link "SKIN INSPECT" [ref=e69] [cursor=pointer]:
+              - /url: /ru/cs2/servers/lounge
+            - img "Settings" [ref=e72] [cursor=pointer]
+            - img [ref=e75]
+          - generic [ref=e80]:
+            - generic [ref=e82]:
+              - button "Previous" [ref=e83] [cursor=pointer]
+              - generic [ref=e85]:
+                - generic [ref=e91] [cursor=pointer]:
+                  - heading [level=6] [ref=e92]: RETAKE
+                  - paragraph [ref=e93]:
+                    - text: О режиме
+                    - img [ref=e94]
+                - generic [ref=e111] [cursor=pointer]:
+                  - generic [ref=e112]:
+                    - heading [level=6] [ref=e113]: Откройте все функции
+                    - paragraph [ref=e114]: Авторизуйтесь через Steam
+                  - button [ref=e116]: Войти через Steam
+                - generic [ref=e122] [cursor=pointer]:
+                  - heading [level=6] [ref=e123]: Получай скины за игру
+                  - paragraph [ref=e124]: миссии на CYBERSHOKE
+                - generic [ref=e130] [cursor=pointer]:
+                  - heading "RETAKE" [level=6] [ref=e131]
+                  - paragraph [ref=e132]:
+                    - text: О режиме
+                    - img [ref=e133]
+                - generic [ref=e150] [cursor=pointer]:
+                  - generic [ref=e151]:
+                    - heading [level=6] [ref=e152]: Откройте все функции
+                    - paragraph [ref=e153]: Авторизуйтесь через Steam
+                  - button [ref=e155]: Войти через Steam
+                - generic [ref=e161] [cursor=pointer]:
+                  - heading [level=6] [ref=e162]: Получай скины за игру
+                  - paragraph [ref=e163]: миссии на CYBERSHOKE
+                - generic [ref=e169] [cursor=pointer]:
+                  - heading [level=6] [ref=e170]: RETAKE
+                  - paragraph [ref=e171]:
+                    - text: О режиме
+                    - img [ref=e172]
+                - generic [ref=e189] [cursor=pointer]:
+                  - generic [ref=e190]:
+                    - heading [level=6] [ref=e191]: Откройте все функции
+                    - paragraph [ref=e192]: Авторизуйтесь через Steam
+                  - button [ref=e194]: Войти через Steam
+                - generic [ref=e200] [cursor=pointer]:
+                  - heading [level=6] [ref=e201]: Получай скины за игру
+                  - paragraph [ref=e202]: миссии на CYBERSHOKE
+              - button "Next" [ref=e203] [cursor=pointer]
+              - list [ref=e204]:
+                - listitem [ref=e205] [cursor=pointer]:
+                  - button "• 1" [ref=e206]
+                - listitem [ref=e207] [cursor=pointer]:
+                  - button "• 2" [ref=e208]
+                - listitem [ref=e209] [cursor=pointer]:
+                  - button "• 3" [ref=e210]
+                - listitem [ref=e211] [cursor=pointer]:
+                  - button "• 4" [ref=e212]
+                - listitem [ref=e213] [cursor=pointer]:
+                  - button "• 5" [ref=e214]
+            - generic [ref=e215]:
+              - generic [ref=e216]:
+                - generic [ref=e223] [cursor=pointer]:
+                  - generic [ref=e224]: "Категория:"
+                  - generic [ref=e226]: Все
+                - generic [ref=e231] [cursor=pointer]: "Локация:"
+                - generic [ref=e238] [cursor=pointer]: "Карта:"
+              - generic [ref=e244]:
+                - generic [ref=e245]:
+                  - textbox "Поиск по серверам..." [ref=e247]
+                  - button [ref=e248] [cursor=pointer]
+                - button [ref=e249] [cursor=pointer]
+            - generic [ref=e252]:
+              - generic [ref=e254]:
+                - heading "9 SLOTS" [level=4] [ref=e255]
+                - generic [ref=e256]:
+                  - generic [ref=e257]:
+                    - generic [ref=e259]:
+                      - generic [ref=e262]: "6"
+                      - generic: "#54 RETAKE"
+                    - generic [ref=e266]: 8/9 | de_mirage
+                    - link [ref=e268] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.211.118.52:27042
+                  - generic [ref=e269]:
+                    - generic [ref=e271]:
+                      - generic [ref=e274]: "18"
+                      - generic: "#311 RETAKE"
+                    - generic [ref=e278]: 8/9 | de_mirage
+                    - link [ref=e280] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 51.75.52.198:28015
+                  - generic [ref=e281]:
+                    - generic [ref=e283]:
+                      - generic [ref=e286]: "28"
+                      - generic: "#511 RETAKE"
+                    - generic [ref=e290]: 8/9 | de_mirage
+                    - link [ref=e292] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 185.40.6.55:28030
+                  - generic [ref=e293]:
+                    - generic [ref=e295]:
+                      - generic [ref=e298]: "28"
+                      - generic: "#577 RETAKE"
+                    - generic [ref=e302]: 8/9 | de_dust2
+                    - link [ref=e304] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.22:28041
+                  - generic [ref=e305]:
+                    - generic [ref=e307]:
+                      - generic [ref=e310]: "28"
+                      - generic: "#422 RETAKE"
+                    - generic [ref=e314]: 6/9 | de_cache
+                    - link [ref=e316] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.134:28023
+                  - generic [ref=e317]:
+                    - generic [ref=e319]:
+                      - generic [ref=e322]: "28"
+                      - generic: "#146 RETAKE"
+                    - generic [ref=e326]: 8/9 | de_mirage
+                    - link [ref=e328] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 185.40.6.31:28044
+                  - generic [ref=e329]:
+                    - generic [ref=e331]:
+                      - generic [ref=e334]: "35"
+                      - generic: "#183 RETAKE"
+                    - generic [ref=e338]: 9/9 – de_mirage
+                  - generic [ref=e340]:
+                    - generic [ref=e342]:
+                      - generic [ref=e345]: "35"
+                      - generic: "#22 RETAKE"
+                    - generic [ref=e349]: 8/9 | de_dust2
+                    - link [ref=e351] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 23.88.73.61:27022
+                  - generic [ref=e352]:
+                    - generic [ref=e354]:
+                      - generic [ref=e357]: "35"
+                      - generic: "#362 RETAKE"
+                    - generic [ref=e361]: 8/9 | de_dust2
+                    - link [ref=e363] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.32:28029
+                  - generic [ref=e364]:
+                    - generic [ref=e366]:
+                      - generic [ref=e369]: "35"
+                      - generic: "#358 RETAKE"
+                    - generic [ref=e373]: 8/9 | de_mirage
+                    - link [ref=e375] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.30:28019
+                  - generic [ref=e376]:
+                    - generic [ref=e378]:
+                      - generic [ref=e381]: "35"
+                      - generic: "#623 RETAKE"
+                    - generic [ref=e385]: 7/9 | de_mirage
+                    - link [ref=e387] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 51.68.170.125:28024
+                  - generic [ref=e388]:
+                    - generic [ref=e390]:
+                      - generic [ref=e393]: "45"
+                      - generic: "#397 RETAKE"
+                    - generic [ref=e397]: 8/9 | de_mirage
+                    - link [ref=e399] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.92.38.54:27028
+                  - generic [ref=e400]:
+                    - generic [ref=e402]:
+                      - generic [ref=e405]: "55"
+                      - generic: "#390 RETAKE"
+                    - generic [ref=e409]: 8/9 | de_mirage
+                    - link [ref=e411] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 195.162.69.214:28050
+                  - generic [ref=e412]:
+                    - generic [ref=e414]:
+                      - generic [ref=e417]: "55"
+                      - generic: "#388 RETAKE"
+                    - generic [ref=e421]: 8/9 | de_mirage
+                    - link [ref=e423] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 195.162.69.214:28044
+                  - generic [ref=e424]:
+                    - generic [ref=e426]:
+                      - generic [ref=e429]: "57"
+                      - generic: "#229 RETAKE"
+                    - generic [ref=e433]: 7/9 | de_mirage
+                    - link [ref=e435] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.15:27017
+                  - generic [ref=e436]:
+                    - generic [ref=e438]:
+                      - generic [ref=e441]: "57"
+                      - generic: "#609 RETAKE"
+                    - generic [ref=e445]: 8/9 | de_mirage
+                    - link [ref=e447] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.54.206:28035
+                  - generic [ref=e448]:
+                    - generic [ref=e450]:
+                      - generic [ref=e453]: "57"
+                      - generic: "#375 RETAKE"
+                    - generic [ref=e457]: 8/9 | de_dust2
+                    - link [ref=e459] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 37.230.228.104:28025
+                  - generic [ref=e460]:
+                    - generic [ref=e462]:
+                      - generic [ref=e465]: "57"
+                      - generic: "#218 RETAKE"
+                    - generic [ref=e469]: 7/9 | de_mirage
+                    - link [ref=e471] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.132:28030
+                  - generic [ref=e472]:
+                    - generic [ref=e474]:
+                      - generic [ref=e477]: "57"
+                      - generic: "#153 RETAKE"
+                    - generic [ref=e481]: 7/9 | de_mirage
+                    - link [ref=e483] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27031
+                  - generic [ref=e484]:
+                    - generic [ref=e486]:
+                      - generic [ref=e489]: "57"
+                      - generic: "#556 RETAKE"
+                    - generic [ref=e493]: 8/9 | de_mirage
+                    - link [ref=e495] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.136.205.64:28041
+                  - generic [ref=e496]:
+                    - generic [ref=e498]:
+                      - generic [ref=e501]: "57"
+                      - generic: "#228 RETAKE"
+                    - generic [ref=e505]: 8/9 | de_dust2
+                    - link [ref=e507] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.15:27016
+                  - generic [ref=e508]:
+                    - generic [ref=e510]:
+                      - generic [ref=e513]: "57"
+                      - generic: "#372 RETAKE"
+                    - generic [ref=e517]: 8/9 | de_mirage
+                    - link [ref=e519] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 37.230.228.104:28022
+                  - generic [ref=e520]:
+                    - generic [ref=e522]:
+                      - generic [ref=e525]: "57"
+                      - generic: "#131 RETAKE"
+                    - generic [ref=e529]: 8/9 | de_mirage
+                    - link [ref=e531] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.214.244:27027
+                  - generic [ref=e532]:
+                    - generic [ref=e534]:
+                      - generic [ref=e537]: "57"
+                      - generic: "#1 RETAKE"
+                    - generic [ref=e541]: 8/9 | de_mirage
+                    - link [ref=e543] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.214.144:27021
+                  - generic [ref=e544]:
+                    - generic [ref=e546]:
+                      - generic [ref=e549]: "57"
+                      - generic: "#560 RETAKE"
+                    - generic [ref=e553]: 8/9 | de_mirage
+                    - link [ref=e555] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 37.230.137.197:28025
+                  - generic [ref=e556]:
+                    - generic [ref=e558]:
+                      - generic [ref=e561]: "57"
+                      - generic: "#216 RETAKE"
+                    - generic [ref=e565]: 8/9 | de_cache
+                    - link [ref=e567] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.132:28028
+                  - generic [ref=e568]:
+                    - generic [ref=e570]:
+                      - generic [ref=e573]: "57"
+                      - generic: "#608 RETAKE"
+                    - generic [ref=e577]: 8/9 | de_mirage
+                    - link [ref=e579] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.54.206:28034
+                  - generic [ref=e580]:
+                    - generic [ref=e582]:
+                      - generic [ref=e585]: "57"
+                      - generic: "#208 RETAKE"
+                    - generic [ref=e589]: 8/9 | de_mirage
+                    - link [ref=e591] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.48.218:28026
+                  - generic [ref=e592]:
+                    - generic [ref=e594]:
+                      - generic [ref=e597]: "6"
+                      - generic: "#60 RETAKE"
+                    - generic [ref=e601]: 7/9 | de_mirage
+                    - link [ref=e603] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.211.118.96:27044
+                  - generic [ref=e604]:
+                    - generic [ref=e606]:
+                      - generic [ref=e609]: "6"
+                      - generic: "#395 RETAKE"
+                    - generic [ref=e613]: 7/9 | de_mirage
+                    - link [ref=e615] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.211.118.96:27037
+                  - generic [ref=e616]:
+                    - generic [ref=e618]:
+                      - generic [ref=e621]: "18"
+                      - generic: "#380 RETAKE"
+                    - generic [ref=e625]: 7/9 | de_mirage
+                    - link [ref=e627] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.36.173.60:28025
+                  - generic [ref=e628]:
+                    - generic [ref=e630]:
+                      - generic [ref=e633]: "35"
+                      - generic: "#353 RETAKE"
+                    - generic [ref=e637]: 7/9 | de_mirage
+                    - link [ref=e639] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.38:28028
+                  - generic [ref=e640]:
+                    - generic [ref=e642]:
+                      - generic [ref=e645]: "35"
+                      - generic: "#118 RETAKE"
+                    - generic [ref=e649]: 7/9 | de_mirage
+                    - link [ref=e651] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28049
+                  - generic [ref=e652]:
+                    - generic [ref=e654]:
+                      - generic [ref=e657]: "35"
+                      - generic: "#364 RETAKE"
+                    - generic [ref=e661]: 6/9 | de_mirage
+                    - link [ref=e663] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.32:28027
+                  - generic [ref=e664]:
+                    - generic [ref=e666]:
+                      - generic [ref=e669]: "40"
+                      - generic: "#329 RETAKE"
+                    - generic [ref=e673]: 6/9 | de_mirage
+                    - link [ref=e675] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.37.84.161:28027
+                  - generic [ref=e676]:
+                    - generic [ref=e678]:
+                      - generic [ref=e681]: "45"
+                      - generic: "#145 RETAKE"
+                    - generic [ref=e685]: 7/9 | de_mirage
+                    - link [ref=e687] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.92.38.55:28026
+                  - generic [ref=e688]:
+                    - generic [ref=e690]:
+                      - generic [ref=e693]: "45"
+                      - generic: "#64 RETAKE"
+                    - generic [ref=e697]: 7/9 | de_mirage
+                    - link [ref=e699] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.92.38.54:27029
+                  - generic [ref=e700]:
+                    - generic [ref=e702]:
+                      - generic [ref=e705]: "57"
+                      - generic: "#207 RETAKE"
+                    - generic [ref=e709]: 10/9 – de_mirage
+                  - generic [ref=e711]:
+                    - generic [ref=e713]:
+                      - generic [ref=e716]: "57"
+                      - generic: "#555 RETAKE"
+                    - generic [ref=e720]: 7/9 | de_mirage
+                    - link [ref=e722] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.215.180:28046
+                  - generic [ref=e723]:
+                    - generic [ref=e725]:
+                      - generic [ref=e728]: "57"
+                      - generic: "#566 RETAKE"
+                    - generic [ref=e732]: 7/9 | de_dust2
+                    - link [ref=e734] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.215.164:28023
+                  - generic [ref=e735]:
+                    - generic [ref=e737]:
+                      - generic [ref=e740]: "57"
+                      - generic: "#209 RETAKE"
+                    - generic [ref=e744]: 7/9 | de_inferno
+                    - link [ref=e746] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.48.218:28027
+                  - generic [ref=e747]:
+                    - generic [ref=e749]:
+                      - generic [ref=e752]: "28"
+                      - generic: "#404 RETAKE"
+                    - generic [ref=e756]: 6/9 | de_mirage
+                    - link [ref=e758] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.126:28034
+                  - generic [ref=e759]:
+                    - generic [ref=e761]:
+                      - generic [ref=e764]: "28"
+                      - generic: "#423 RETAKE"
+                    - generic [ref=e768]: 6/9 | de_dust2
+                    - link [ref=e770] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.134:28024
+                  - generic [ref=e771]:
+                    - generic [ref=e773]:
+                      - generic [ref=e776]: "35"
+                      - generic: "#312 RETAKE"
+                    - generic [ref=e780]: 6/9 | de_mirage
+                    - link [ref=e782] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.6:28015
+                  - generic [ref=e783]:
+                    - generic [ref=e785]:
+                      - generic [ref=e788]: "57"
+                      - generic: "#224 RETAKE"
+                    - generic [ref=e792]: 8/9 | de_mirage
+                    - link [ref=e794] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.132:28036
+                  - generic [ref=e795]:
+                    - generic [ref=e797]:
+                      - generic [ref=e800]: "57"
+                      - generic: "#553 RETAKE"
+                    - generic [ref=e804]: 6/9 | de_mirage
+                    - link [ref=e806] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.215.180:28042
+                  - generic [ref=e807]:
+                    - generic [ref=e809]:
+                      - generic [ref=e812]: "57"
+                      - generic: "#211 RETAKE"
+                    - generic [ref=e816]: 7/9 | de_mirage
+                    - link [ref=e818] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.48.207:28043
+                  - generic [ref=e819]:
+                    - generic [ref=e821]:
+                      - generic [ref=e824]: "57"
+                      - generic: "#365 RETAKE"
+                    - generic [ref=e828]: 7/9 | de_mirage
+                    - link [ref=e830] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 37.230.228.104:28015
+                  - generic [ref=e831]:
+                    - generic [ref=e833]:
+                      - generic [ref=e836]: "28"
+                      - generic: "#512 RETAKE"
+                    - generic [ref=e840]: 5/9 | de_mirage
+                    - link [ref=e842] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 185.40.6.55:28035
+                  - generic [ref=e843]:
+                    - generic [ref=e845]:
+                      - generic [ref=e848]: "28"
+                      - generic: "#504 RETAKE"
+                    - generic [ref=e852]: 5/9 | de_mirage
+                    - link [ref=e854] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 185.40.6.68:28022
+                  - generic [ref=e855]:
+                    - generic [ref=e857]:
+                      - generic [ref=e860]: "40"
+                      - generic: "#336 RETAKE"
+                    - generic [ref=e864]: 5/9 | de_mirage
+                    - link [ref=e866] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.36.177.116:28023
+                  - generic [ref=e867]:
+                    - generic [ref=e869]:
+                      - generic [ref=e872]: "57"
+                      - generic: "#9 RETAKE"
+                    - generic [ref=e876]: 5/9 | de_nuke
+                    - link [ref=e878] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.214.144:27029
+                  - generic [ref=e879]:
+                    - generic [ref=e881]:
+                      - generic [ref=e884]: "57"
+                      - generic: "#154 RETAKE"
+                    - generic [ref=e888]: 5/9 | de_mirage
+                    - link [ref=e890] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27029
+                  - generic [ref=e891]:
+                    - generic [ref=e893]:
+                      - generic [ref=e896]: "57"
+                      - generic: "#148 RETAKE"
+                    - generic [ref=e900]: 5/9 | de_mirage
+                    - link [ref=e902] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27035
+                  - generic [ref=e903]:
+                    - generic [ref=e905]:
+                      - generic [ref=e908]: "28"
+                      - generic: "#578 RETAKE"
+                    - generic [ref=e912]: 5/9 | de_vertigo
+                    - link [ref=e914] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.22:28042
+                  - generic [ref=e915]:
+                    - generic [ref=e917]:
+                      - generic [ref=e920]: "68"
+                      - generic: "#71 RETAKE"
+                    - generic [ref=e924]: 4/9 | de_mirage
+                    - link [ref=e926] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 135.181.58.32:27029
+                  - generic [ref=e927]:
+                    - generic [ref=e929]:
+                      - generic [ref=e932]: "57"
+                      - generic: "#628 RETAKE"
+                    - generic [ref=e936]: 4/9 | de_mirage
+                    - link [ref=e938] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 81.163.20.85:28038
+                  - generic [ref=e939]:
+                    - generic [ref=e941]:
+                      - generic [ref=e944]: "57"
+                      - generic: "#561 RETAKE"
+                    - generic [ref=e948]: 3/9 | de_mirage
+                    - link [ref=e950] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 37.230.137.197:28026
+                  - generic [ref=e951]:
+                    - generic [ref=e953]:
+                      - generic [ref=e956]: "28"
+                      - generic: "#503 RETAKE"
+                    - generic [ref=e960]: 3/9 | de_dust2
+                    - link [ref=e962] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 185.40.6.68:28021
+                  - generic [ref=e963]:
+                    - generic [ref=e965]:
+                      - generic [ref=e968]: "28"
+                      - generic: "#615 RETAKE"
+                    - generic [ref=e972]: 2/9 | de_mirage
+                    - link [ref=e974] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.159:28028
+                  - generic [ref=e975]:
+                    - generic [ref=e977]:
+                      - generic [ref=e980]: "57"
+                      - generic: "#558 RETAKE"
+                    - generic [ref=e984]: 2/9 | de_dust2
+                    - link [ref=e986] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.136.205.64:28043
+                  - generic [ref=e987]:
+                    - generic [ref=e989]:
+                      - generic [ref=e992]: "18"
+                      - generic: "#376 RETAKE"
+                    - generic [ref=e996]: 2/9 | de_mirage
+                    - link [ref=e998] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.36.173.60:28021
+                  - generic [ref=e999]:
+                    - generic [ref=e1001]:
+                      - generic [ref=e1004]: "28"
+                      - generic: "#617 RETAKE"
+                    - generic [ref=e1008]: 1/9 | de_mirage
+                    - link [ref=e1010] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.159:28030
+                  - generic [ref=e1011]:
+                    - generic [ref=e1013]:
+                      - generic [ref=e1016]: "35"
+                      - generic: "#355 RETAKE"
+                    - generic [ref=e1020]: 1/9 | de_mirage
+                    - link [ref=e1022] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.30:28016
+                  - generic [ref=e1023]:
+                    - generic [ref=e1025]:
+                      - generic [ref=e1028]: "35"
+                      - generic: "#5 RETAKE"
+                    - generic [ref=e1032]: 1/9 | de_dust2
+                    - link [ref=e1034] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 168.119.196.20:27040
+                  - generic [ref=e1035]:
+                    - generic [ref=e1037]:
+                      - generic [ref=e1040]: "57"
+                      - generic: "#13 RETAKE"
+                    - generic [ref=e1044]: 1/9 | de_train
+                    - link [ref=e1046] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.214.144:27033
+                  - generic [ref=e1047]:
+                    - generic [ref=e1049]:
+                      - generic [ref=e1052]: "6"
+                      - generic: "#55 RETAKE"
+                    - generic [ref=e1055]: 0/9 | de_dust2
+                    - link [ref=e1057] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.211.118.52:27043
+                  - generic [ref=e1058]:
+                    - generic [ref=e1060]:
+                      - generic [ref=e1063]: "6"
+                      - generic: "#394 RETAKE"
+                    - generic [ref=e1066]: 0/9 | de_inferno
+                    - link [ref=e1068] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.211.118.52:27038
+                  - generic [ref=e1069]:
+                    - generic [ref=e1071]:
+                      - generic [ref=e1074]: "18"
+                      - generic: "#320 RETAKE"
+                    - generic [ref=e1077]: 0/9 | de_mirage
+                    - link [ref=e1079] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 51.75.52.198:28026
+                  - generic [ref=e1080]:
+                    - generic [ref=e1082]:
+                      - generic [ref=e1085]: "18"
+                      - generic: "#379 RETAKE"
+                    - generic [ref=e1088]: 0/9 | de_dust2
+                    - link [ref=e1090] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.36.173.60:28024
+                  - generic [ref=e1091]:
+                    - generic [ref=e1093]:
+                      - generic [ref=e1096]: "18"
+                      - generic: "#378 RETAKE"
+                    - generic [ref=e1099]: 0/9 | de_inferno
+                    - link [ref=e1101] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.36.173.60:28023
+                  - generic [ref=e1102]:
+                    - generic [ref=e1104]:
+                      - generic [ref=e1107]: "18"
+                      - generic: "#322 RETAKE"
+                    - generic [ref=e1110]: 0/9 | de_cache
+                    - link [ref=e1112] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 51.75.52.198:28028
+                  - generic [ref=e1113]:
+                    - generic [ref=e1115]:
+                      - generic [ref=e1118]: "18"
+                      - generic: "#273 RETAKE"
+                    - generic [ref=e1121]: 0/9 | de_train
+                    - link [ref=e1123] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 51.75.52.197:28025
+                  - generic [ref=e1124]:
+                    - generic [ref=e1126]:
+                      - generic [ref=e1129]: "28"
+                      - generic: "#571 RETAKE"
+                    - generic [ref=e1132]: 0/9 | de_mirage
+                    - link [ref=e1134] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 91.103.255.15:28026
+                  - generic [ref=e1135]:
+                    - generic [ref=e1137]:
+                      - generic [ref=e1140]: "35"
+                      - generic: "#184 RETAKE"
+                    - generic [ref=e1143]: 0/9 | de_mirage
+                    - link [ref=e1145] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 88.99.11.135:28037
+                  - generic [ref=e1146]:
+                    - generic [ref=e1148]:
+                      - generic [ref=e1151]: "35"
+                      - generic: "#36 RETAKE"
+                    - generic [ref=e1154]: 0/9 | de_cache
+                    - link [ref=e1156] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 162.55.94.181:27054
+                  - generic [ref=e1157]:
+                    - generic [ref=e1159]:
+                      - generic [ref=e1162]: "35"
+                      - generic: "#502 RETAKE"
+                    - generic [ref=e1165]: 0/9 | de_vertigo
+                    - link [ref=e1167] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 162.55.94.181:27033
+                  - generic [ref=e1168]:
+                    - generic [ref=e1170]:
+                      - generic [ref=e1173]: "35"
+                      - generic: "#360 RETAKE"
+                    - generic [ref=e1176]: 0/9 | de_dust2
+                    - link [ref=e1178] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 217.182.199.30:28021
+                  - generic [ref=e1179]:
+                    - generic [ref=e1181]:
+                      - generic [ref=e1184]: "35"
+                      - generic: "#140 RETAKE"
+                    - generic [ref=e1187]: 0/9 | de_inferno
+                    - link [ref=e1189] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28044
+                  - generic [ref=e1190]:
+                    - generic [ref=e1192]:
+                      - generic [ref=e1195]: "35"
+                      - generic: "#117 RETAKE"
+                    - generic [ref=e1198]: 0/9 | de_train
+                    - link [ref=e1200] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28050
+                  - generic [ref=e1201]:
+                    - generic [ref=e1203]:
+                      - generic [ref=e1206]: "35"
+                      - generic: "#136 RETAKE"
+                    - generic [ref=e1209]: 0/9 | de_overpass
+                    - link [ref=e1211] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28040
+                  - generic [ref=e1212]:
+                    - generic [ref=e1214]:
+                      - generic [ref=e1217]: "40"
+                      - generic: "#317 RETAKE"
+                    - generic [ref=e1220]: 0/9 | de_mirage
+                    - link [ref=e1222] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 147.135.138.145:28032
+                  - generic [ref=e1223]:
+                    - generic [ref=e1225]:
+                      - generic [ref=e1228]: "40"
+                      - generic: "#328 RETAKE"
+                    - generic [ref=e1231]: 0/9 | de_overpass
+                    - link [ref=e1233] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.37.84.161:28026
+                  - generic [ref=e1234]:
+                    - generic [ref=e1236]:
+                      - generic [ref=e1239]: "40"
+                      - generic: "#304 RETAKE"
+                    - generic [ref=e1242]: 0/9 | de_nuke
+                    - link [ref=e1244] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 54.36.177.116:28015
+                  - generic [ref=e1245]:
+                    - generic [ref=e1247]:
+                      - generic [ref=e1250]: "40"
+                      - generic: "#318 RETAKE"
+                    - generic [ref=e1253]: 0/9 | de_cache
+                    - link [ref=e1255] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 147.135.138.145:28033
+                  - generic [ref=e1256]:
+                    - generic [ref=e1258]:
+                      - generic [ref=e1261]: "40"
+                      - generic: "#301 RETAKE"
+                    - generic [ref=e1264]: 0/9 | de_dust2
+                    - link [ref=e1266] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 147.135.138.145:28015
+                  - generic [ref=e1267]:
+                    - generic [ref=e1269]:
+                      - generic [ref=e1272]: "40"
+                      - generic: "#315 RETAKE"
+                    - generic [ref=e1275]: 0/9 | de_inferno
+                    - link [ref=e1277] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 147.135.138.145:28030
+                  - generic [ref=e1278]:
+                    - generic [ref=e1280]:
+                      - generic [ref=e1283]: "45"
+                      - generic: "#398 RETAKE"
+                    - generic [ref=e1286]: 0/9 | de_dust2
+                    - link [ref=e1288] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.92.38.55:28025
+                  - generic [ref=e1289]:
+                    - generic [ref=e1291]:
+                      - generic [ref=e1294]: "45"
+                      - generic: "#68 RETAKE"
+                    - generic [ref=e1297]: 0/9 | de_cache
+                    - link [ref=e1299] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.92.38.54:27030
+                  - generic [ref=e1300]:
+                    - generic [ref=e1302]:
+                      - generic [ref=e1305]: "45"
+                      - generic: "#399 RETAKE"
+                    - generic [ref=e1308]: 0/9 | de_inferno
+                    - link [ref=e1310] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.92.38.55:28027
+                  - generic [ref=e1311]:
+                    - generic [ref=e1313]:
+                      - generic [ref=e1316]: "55"
+                      - generic: "#385 RETAKE"
+                    - generic [ref=e1319]: 0/9 | de_dust2
+                    - link [ref=e1321] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 195.162.69.214:28025
+                  - generic [ref=e1322]:
+                    - generic [ref=e1324]:
+                      - generic [ref=e1327]: "55"
+                      - generic: "#387 RETAKE"
+                    - generic [ref=e1330]: 0/9 | de_mirage
+                    - link [ref=e1332] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 195.162.69.214:28027
+                  - generic [ref=e1333]:
+                    - generic [ref=e1335]:
+                      - generic [ref=e1338]: "57"
+                      - generic: "#367 RETAKE"
+                    - generic [ref=e1341]: 0/9 | de_mirage
+                    - link [ref=e1343] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 37.230.228.104:28017
+                  - generic [ref=e1344]:
+                    - generic [ref=e1346]:
+                      - generic [ref=e1349]: "57"
+                      - generic: "#213 RETAKE"
+                    - generic [ref=e1352]: 0/9 | de_vertigo
+                    - link [ref=e1354] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.48.207:28044
+                  - generic [ref=e1355]:
+                    - generic [ref=e1357]:
+                      - generic [ref=e1360]: "57"
+                      - generic: "#151 RETAKE"
+                    - generic [ref=e1363]: 0/9 | de_overpass
+                    - link [ref=e1365] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27033
+                  - generic [ref=e1366]:
+                    - generic [ref=e1368]:
+                      - generic [ref=e1371]: "57"
+                      - generic: "#610 RETAKE"
+                    - generic [ref=e1374]: 0/9 | de_cache
+                    - link [ref=e1376] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.54.206:28036
+                  - generic [ref=e1377]:
+                    - generic [ref=e1379]:
+                      - generic [ref=e1382]: "57"
+                      - generic: "#152 RETAKE"
+                    - generic [ref=e1385]: 0/9 | de_train
+                    - link [ref=e1387] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27032
+                  - generic [ref=e1388]:
+                    - generic [ref=e1390]:
+                      - generic [ref=e1393]: "57"
+                      - generic: "#171 RETAKE"
+                    - generic [ref=e1396]: 0/9 | de_dust2
+                    - link [ref=e1398] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.15:27038
+                  - generic [ref=e1399]:
+                    - generic [ref=e1401]:
+                      - generic [ref=e1404]: "57"
+                      - generic: "#158 RETAKE"
+                    - generic [ref=e1407]: 0/9 | de_inferno
+                    - link [ref=e1409] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27024
+                  - generic [ref=e1410]:
+                    - generic [ref=e1412]:
+                      - generic [ref=e1415]: "51"
+                      - generic: "#421 RETAKE"
+                    - generic [ref=e1418]: 0/9 | de_inferno
+                    - link [ref=e1420] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.143.199.231:28045
+                  - generic [ref=e1421]:
+                    - generic [ref=e1423]:
+                      - generic [ref=e1426]: "51"
+                      - generic: "#419 RETAKE"
+                    - generic [ref=e1429]: 0/9 | de_mirage
+                    - link [ref=e1431] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.143.199.231:28043
+                  - generic [ref=e1432]:
+                    - generic [ref=e1434]:
+                      - generic [ref=e1437]: "51"
+                      - generic: "#418 RETAKE"
+                    - generic [ref=e1440]: 0/9 | de_dust2
+                    - link [ref=e1442] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 45.143.199.231:28042
+              - generic [ref=e1444]:
+                - heading "7 SLOTS" [level=4] [ref=e1445]
+                - generic [ref=e1446]:
+                  - generic [ref=e1447]:
+                    - generic [ref=e1449]:
+                      - generic [ref=e1452]: "57"
+                      - generic: "#501 RETAKE"
+                    - generic [ref=e1456]: 5/7 | de_mirage
+                    - link [ref=e1458] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27042
+                  - generic [ref=e1459]:
+                    - generic [ref=e1461]:
+                      - generic [ref=e1464]: "35"
+                      - generic: "#601 RETAKE"
+                    - generic [ref=e1468]: 3/7 | de_mirage
+                    - link [ref=e1470] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 5.9.148.239:28055
+                  - generic [ref=e1471]:
+                    - generic [ref=e1473]:
+                      - generic [ref=e1476]: "35"
+                      - generic: "#602 RETAKE"
+                    - generic [ref=e1480]: 3/7 | de_mirage
+                    - link [ref=e1482] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 5.9.148.239:28054
+                  - generic [ref=e1483]:
+                    - generic [ref=e1485]:
+                      - generic [ref=e1488]: "35"
+                      - generic: "# RETAKE"
+                    - generic [ref=e1492]: 2/7 | de_mirage
+                    - link [ref=e1494] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 5.9.148.239:28041
+                  - generic [ref=e1495]:
+                    - generic [ref=e1497]:
+                      - generic [ref=e1500]: "35"
+                      - generic: "#37 RETAKE"
+                    - generic [ref=e1504]: 2/7 | de_train
+                    - link [ref=e1506] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28060
+                  - generic [ref=e1507]:
+                    - generic [ref=e1509]:
+                      - generic [ref=e1512]: "35"
+                      - generic: "#38 RETAKE"
+                    - generic [ref=e1516]: 2/7 | de_mirage
+                    - link [ref=e1518] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28058
+                  - generic [ref=e1519]:
+                    - generic [ref=e1521]:
+                      - generic [ref=e1524]: "57"
+                      - generic: "#162 RETAKE"
+                    - generic [ref=e1528]: 2/7 | de_mirage
+                    - link [ref=e1530] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.15:27026
+                  - generic [ref=e1531]:
+                    - generic [ref=e1533]:
+                      - generic [ref=e1536]: "57"
+                      - generic: "#141 RETAKE"
+                    - generic [ref=e1540]: 2/7 | de_mirage
+                    - link [ref=e1542] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.49.247:27040
+                  - generic [ref=e1543]:
+                    - generic [ref=e1545]:
+                      - generic [ref=e1548]: "35"
+                      - generic: "#16 RETAKE"
+                    - generic [ref=e1552]: 1/7 | de_mirage
+                    - link [ref=e1554] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28059
+                  - generic [ref=e1555]:
+                    - generic [ref=e1557]:
+                      - generic [ref=e1560]: "35"
+                      - generic: "#39 RETAKE"
+                    - generic [ref=e1563]: 0/7 | de_nuke
+                    - link [ref=e1565] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 148.251.21.131:28057
+                  - generic [ref=e1566]:
+                    - generic [ref=e1568]:
+                      - generic [ref=e1571]: "57"
+                      - generic: "#125 RETAKE"
+                    - generic [ref=e1574]: 0/7 | de_dust2
+                    - link [ref=e1576] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 62.122.214.244:27042
+                  - generic [ref=e1577]:
+                    - generic [ref=e1579]:
+                      - generic [ref=e1582]: "57"
+                      - generic: "#163 RETAKE"
+                    - generic [ref=e1585]: 0/7 | de_cache
+                    - link [ref=e1587] [cursor=pointer]:
+                      - /url: steam://rungameid/730//+connect 46.174.55.15:27027
+      - generic [ref=e1588]:
+        - link "SkinRave" [ref=e1591] [cursor=pointer]:
+          - /url: https://skinrave.gg/en?r=CYBERSHOKE
+          - img "SkinRave" [ref=e1592]
+        - generic [ref=e1593]:
+          - generic [ref=e1594]:
+            - link "Cybershoke" [ref=e1595] [cursor=pointer]:
+              - /url: https://cybershoke.net
+              - img "Cybershoke" [ref=e1596]
+            - generic [ref=e1597]:
+              - heading "Copyright © 2019–2026" [level=5] [ref=e1598]
+              - heading "CYBERSHOKE ESPORTS LIMITED" [level=6] [ref=e1599]
+              - text: Room 8, S-V, 6/F, Valiant Industrial Centre, 2-12 Au Pui Wan Street, Fo Tan, New Territories, Hong Kong
+          - generic [ref=e1600]:
+            - generic [ref=e1601]:
+              - list [ref=e1602]:
+                - link "Играть" [ref=e1603] [cursor=pointer]:
+                  - /url: /ru/
+                  - listitem [ref=e1604]: Играть
+                - link "Миссии" [ref=e1605] [cursor=pointer]:
+                  - /url: /ru/missions
+                  - listitem [ref=e1606]: Миссии
+                - link "Лидерборд" [ref=e1607] [cursor=pointer]:
+                  - /url: /ru/cs2/leaderboard
+                  - listitem [ref=e1608]: Лидерборд
+                - link "PREMIUM" [ref=e1609] [cursor=pointer]:
+                  - /url: /ru/premium
+                  - listitem [ref=e1610]: PREMIUM
+              - list [ref=e1611]:
+                - link "Магазин" [ref=e1612] [cursor=pointer]:
+                  - /url: /ru/shop
+                  - listitem [ref=e1613]: Магазин
+                - link "Помощь" [ref=e1614] [cursor=pointer]:
+                  - /url: /ru/learn
+                  - listitem [ref=e1615]: Помощь
+                - link "Контакты" [ref=e1616] [cursor=pointer]:
+                  - /url: /ru/contacts
+                  - listitem [ref=e1617]: Контакты
+                - link "Бренд" [ref=e1618] [cursor=pointer]:
+                  - /url: /ru/brand
+                  - listitem [ref=e1619]: Бренд
+              - list [ref=e1620]:
+                - link "Политика конфиденциальности" [ref=e1621] [cursor=pointer]:
+                  - /url: /ru/policy
+                  - listitem [ref=e1622]: Политика конфиденциальности
+                - link "Лицензионное соглашение" [ref=e1623] [cursor=pointer]:
+                  - /url: /ru/terms
+                  - listitem [ref=e1624]: Лицензионное соглашение
+                - link "Правила проекта" [ref=e1625] [cursor=pointer]:
+                  - /url: /ru/learn/181
+                  - listitem [ref=e1626]: Правила проекта
+                - link "Блог" [ref=e1627] [cursor=pointer]:
+                  - /url: https://cybershoke.net/ru/blog
+                  - listitem [ref=e1628]: Блог
+            - generic [ref=e1629]:
+              - generic [ref=e1630]:
+                - link "Steam" [ref=e1631] [cursor=pointer]:
+                  - /url: https://steamcommunity.com/groups/cybershokesteam
+                  - img "Steam" [ref=e1632]
+                - link "VK" [ref=e1633] [cursor=pointer]:
+                  - /url: https://vk.com/cybershoke
+                  - img "VK" [ref=e1634]
+                - link "Discord" [ref=e1635] [cursor=pointer]:
+                  - /url: https://discord.gg/cybershoke
+                  - img "Discord" [ref=e1636]
+                - link "Telegram" [ref=e1637] [cursor=pointer]:
+                  - /url: https://t.me/cybershoke
+                  - img "Telegram" [ref=e1638]
+                - link "YouTube" [ref=e1639] [cursor=pointer]:
+                  - /url: https://bit.ly/3e1SrIH
+                  - img "YouTube" [ref=e1640]
+              - generic [ref=e1641]:
+                - img [ref=e1642]
+                - img [ref=e1646]
+              - button "ru Русский" [ref=e1653] [cursor=pointer]:
+                - generic [ref=e1654]:
+                  - img "ru" [ref=e1655]
+                  - text: Русский
+                - img [ref=e1656]

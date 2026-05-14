@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cybershoke Inventory Live — userscript</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main class="landing">
+    <h1>Cybershoke Inventory Live</h1>
+    <p class="subtitle">
+      Userscript для cybershoke.net, который показывает цены Steam-инвентарей
+      всех игроков на сервере и общую сумму прямо в UI Cybershoke.
+    </p>
+
+    <section class="card">
+      <h2>Установка (3 шага)</h2>
+      <ol>
+        <li>
+          Установите <strong>Tampermonkey</strong> для вашего браузера:
+          <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener">tampermonkey.net</a>
+        </li>
+        <li>
+          Установите userscript:
+          <a class="install-btn" href="/cybershoke-inventory.user.js">
+            🚀 Установить Cybershoke Inventory Live
+          </a>
+          <small>(Tampermonkey подхватит <code>.user.js</code> автоматически и покажет диалог установки)</small>
+        </li>
+        <li>
+          Откройте <a href="https://cybershoke.net/cs2/servers/retake" target="_blank" rel="noopener">cybershoke.net</a>,
+          залогиньтесь через Steam, кликните на сервер — увидите цифры рядом с никами и панель с общей суммой.
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Как это работает</h2>
+      <ul>
+        <li>Userscript встраивается в страницы cybershoke.net</li>
+        <li>Когда вы открываете сервер, скрипт перехватывает API-ответ Cybershoke (видит SteamID игроков из вашей залогиненной сессии)</li>
+        <li>Отправляет список SteamID на наш backend на Vercel</li>
+        <li>Backend дёргает Steam-инвентари + цены Skinport (~18 тыс. скинов CS2)</li>
+        <li>Userscript рисует цены рядом с никами + общую сумму в правом нижнем углу</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Настройка backend URL</h2>
+      <p>
+        По умолчанию userscript обращается к <code>http://localhost:3000</code> (для локальной разработки).
+        После деплоя на Vercel выполните в консоли cybershoke.net:
+      </p>
+      <pre><code>csliSetBackend('https://your-app.vercel.app')</code></pre>
+      <p>URL запоминается в localStorage, повторно вводить не нужно.</p>
+    </section>
+
+    <footer class="footer">
+      <small>
+        Данные с cybershoke.net (из вашей сессии) · Цены Skinport · Инвентари Steam Community ·
+        <a href="https://github.com" target="_blank">source</a>
+      </small>
+    </footer>
+  </main>
+</body>
+</html>

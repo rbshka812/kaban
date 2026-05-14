@@ -1,0 +1,490 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e5] [cursor=pointer]:
+        - /url: /ru/
+      - generic [ref=e9]: "12829"
+    - navigation [ref=e11]:
+      - link "Войти через Steam" [ref=e13] [cursor=pointer]:
+        - /url: //auth.cybershoke.net/steam
+  - complementary [ref=e14]:
+    - navigation [ref=e15]:
+      - link [ref=e16] [cursor=pointer]:
+        - /url: /ru/cs2
+      - link [ref=e17] [cursor=pointer]:
+        - /url: /ru/matches
+      - link [ref=e18] [cursor=pointer]:
+        - /url: /ru/premium
+      - link [ref=e19] [cursor=pointer]:
+        - /url: /ru/missions
+      - link [ref=e20] [cursor=pointer]:
+        - /url: /ru/cs2/pickem/astana-2026
+      - link [ref=e21] [cursor=pointer]:
+        - /url: /ru/cs2/leaderboard
+      - link [ref=e22] [cursor=pointer]:
+        - /url: /ru/shop
+      - link [ref=e23] [cursor=pointer]:
+        - /url: /ru/learn
+      - link [ref=e25] [cursor=pointer]:
+        - /url: ""
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - generic [ref=e31]: "🎉Pick`Em на CYBERSHOKE! Предугадывай исходы матчей, получай прокрутки в барабане призов и зарабатывай скины!"
+            - link "Поставить пикем!" [ref=e32] [cursor=pointer]:
+              - /url: /ru/cs2/pickem/astana-2026
+          - img [ref=e33] [cursor=pointer]
+        - generic [ref=e35]:
+          - navigation [ref=e36]:
+            - link "Создать лобби" [ref=e37] [cursor=pointer]:
+              - /url: /ru/matches
+              - text: Создать лобби
+              - img [ref=e38]
+            - link "DM" [ref=e41] [cursor=pointer]:
+              - /url: /ru/cs2/servers/dm
+            - link "DUELS" [ref=e42] [cursor=pointer]:
+              - /url: /ru/cs2/servers/duels
+            - link "RETAKE" [ref=e43] [cursor=pointer]:
+              - /url: /ru/cs2/servers/retake
+            - link "RETAKE CARDS" [ref=e44] [cursor=pointer]:
+              - /url: /ru/cs2/servers/retakecards
+            - link "5X5" [ref=e45] [cursor=pointer]:
+              - /url: /ru/cs2/servers/5x5
+            - link "2X2" [ref=e46] [cursor=pointer]:
+              - /url: /ru/cs2/servers/2x2
+            - link "BHOP" [ref=e47] [cursor=pointer]:
+              - /url: /ru/cs2/servers/bhop
+            - link "SURF" [ref=e48] [cursor=pointer]:
+              - /url: /ru/cs2/servers/surf
+            - link "KZ" [ref=e49] [cursor=pointer]:
+              - /url: /ru/cs2/servers/kz
+            - link "PUBLIC" [ref=e50] [cursor=pointer]:
+              - /url: /ru/cs2/servers/public
+            - link "AWP" [ref=e51] [cursor=pointer]:
+              - /url: /ru/cs2/servers/awp
+            - link "DUELS 2X2" [ref=e52] [cursor=pointer]:
+              - /url: /ru/cs2/servers/duels2x2
+            - link "EXECUTE" [ref=e53] [cursor=pointer]:
+              - /url: /ru/cs2/servers/execute
+            - link "CLUTCH" [ref=e54] [cursor=pointer]:
+              - /url: /ru/cs2/servers/clutch
+            - link "PISTOL RETAKE" [ref=e55] [cursor=pointer]:
+              - /url: /ru/cs2/servers/pistolretake
+            - link "ARENA" [ref=e56] [cursor=pointer]:
+              - /url: /ru/cs2/servers/arena
+            - link "MULTICFG" [ref=e57] [cursor=pointer]:
+              - /url: /ru/cs2/servers/multicfgdm
+            - link "PISTOLDM" [ref=e58] [cursor=pointer]:
+              - /url: /ru/cs2/servers/pistoldm
+            - link "HSDM" [ref=e59] [cursor=pointer]:
+              - /url: /ru/cs2/servers/hsdm
+            - link "AWPDM" [ref=e60] [cursor=pointer]:
+              - /url: /ru/cs2/servers/awpdm
+            - link "AIMDM" [ref=e61] [cursor=pointer]:
+              - /url: /ru/cs2/servers/aimdm
+            - link "JAIL" [ref=e62] [cursor=pointer]:
+              - /url: /ru/cs2/servers/jail
+            - link "MANIAC" [ref=e63] [cursor=pointer]:
+              - /url: /ru/cs2/servers/maniac
+            - link "DEATHRUN" [ref=e64] [cursor=pointer]:
+              - /url: /ru/cs2/servers/deathrun
+            - link "MINIGAMES" [ref=e65] [cursor=pointer]:
+              - /url: /ru/cs2/servers/minigames
+            - link "HNS" [ref=e66] [cursor=pointer]:
+              - /url: /ru/cs2/servers/hns
+            - link "SURF COMBAT" [ref=e67] [cursor=pointer]:
+              - /url: /ru/cs2/servers/surfcombat
+            - link "SKIN INSPECT" [ref=e68] [cursor=pointer]:
+              - /url: /ru/cs2/servers/lounge
+            - img "Settings" [ref=e71] [cursor=pointer]
+            - img [ref=e74]
+          - generic [ref=e82]:
+            - img "pickem_astana2026" [ref=e83] [cursor=pointer]
+            - img "modes_advprem" [ref=e84] [cursor=pointer]
+            - generic [ref=e85]:
+              - heading "Тренируйся против PRO-игроков" [level=3] [ref=e86]
+              - generic [ref=e88]:
+                - text: ←
+                - generic [ref=e90]:
+                  - generic [ref=e93]:
+                    - generic [ref=e94]: woxic
+                    - generic [ref=e95]: 177 ч
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: b0RUP
+                    - generic [ref=e101]: 199 ч
+                  - generic [ref=e105]:
+                    - generic [ref=e106]: frozen
+                    - generic [ref=e107]: 143 ч
+                  - generic [ref=e111]:
+                    - generic [ref=e112]: Jabbi
+                    - generic [ref=e113]: 45 ч
+                  - generic [ref=e117]:
+                    - generic [ref=e118]: yuurih
+                    - generic [ref=e119]: 19 ч
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: jL
+                    - generic [ref=e125]: 135 ч
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: iM
+                    - generic [ref=e131]: 20 ч
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: Patsi
+                    - generic [ref=e137]: 331 ч
+                  - generic [ref=e141]:
+                    - generic [ref=e142]: shalfey
+                    - generic [ref=e143]: 123 ч
+                  - generic [ref=e147]:
+                    - generic [ref=e148]: CYPHER
+                    - generic [ref=e149]: 23 ч
+                  - generic [ref=e153]:
+                    - generic [ref=e154]: fame
+                    - generic [ref=e155]: 279 ч
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: iDISBALANCE
+                    - generic [ref=e161]: 428 ч
+                  - generic [ref=e165]:
+                    - generic [ref=e166]: m0NESY
+                    - generic [ref=e167]: 430 ч
+                  - generic [ref=e171]:
+                    - generic [ref=e172]: kRaSnaL
+                    - generic [ref=e173]: 325 ч
+                  - generic [ref=e177]:
+                    - generic [ref=e178]: NertZ
+                    - generic [ref=e179]: 130 ч
+                  - generic [ref=e183]:
+                    - generic [ref=e184]: clax
+                    - generic [ref=e185]: 151 ч
+                  - generic [ref=e189]:
+                    - generic [ref=e190]: nafany
+                    - generic [ref=e191]: 162 ч
+                  - generic [ref=e195]:
+                    - generic [ref=e196]: Calyx
+                    - generic [ref=e197]: 93 ч
+                  - generic [ref=e201]:
+                    - generic [ref=e202]: hades
+                    - generic [ref=e203]: 69 ч
+                  - generic [ref=e207]:
+                    - generic [ref=e208]: woxic
+                    - generic [ref=e209]: 177 ч
+                  - generic [ref=e213]:
+                    - generic [ref=e214]: b0RUP
+                    - generic [ref=e215]: 199 ч
+                  - generic [ref=e219]:
+                    - generic [ref=e220]: frozen
+                    - generic [ref=e221]: 143 ч
+                  - generic [ref=e225]:
+                    - generic [ref=e226]: Jabbi
+                    - generic [ref=e227]: 45 ч
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: yuurih
+                    - generic [ref=e233]: 19 ч
+                  - generic [ref=e237]:
+                    - generic [ref=e238]: jL
+                    - generic [ref=e239]: 135 ч
+                  - generic [ref=e243]:
+                    - generic [ref=e244]: iM
+                    - generic [ref=e245]: 20 ч
+                  - generic [ref=e249]:
+                    - generic [ref=e250]: Patsi
+                    - generic [ref=e251]: 331 ч
+                  - generic [ref=e255]:
+                    - generic [ref=e256]: shalfey
+                    - generic [ref=e257]: 123 ч
+                  - generic [ref=e261]:
+                    - generic [ref=e262]: CYPHER
+                    - generic [ref=e263]: 23 ч
+                  - generic [ref=e267]:
+                    - generic [ref=e268]: fame
+                    - generic [ref=e269]: 279 ч
+                  - generic [ref=e273]:
+                    - generic [ref=e274]: iDISBALANCE
+                    - generic [ref=e275]: 428 ч
+                  - generic [ref=e279]:
+                    - generic [ref=e280]: m0NESY
+                    - generic [ref=e281]: 430 ч
+                  - generic [ref=e285]:
+                    - generic [ref=e286]: kRaSnaL
+                    - generic [ref=e287]: 325 ч
+                  - generic [ref=e291]:
+                    - generic [ref=e292]: NertZ
+                    - generic [ref=e293]: 130 ч
+                  - generic [ref=e297]:
+                    - generic [ref=e298]: clax
+                    - generic [ref=e299]: 151 ч
+                  - generic [ref=e303]:
+                    - generic [ref=e304]: nafany
+                    - generic [ref=e305]: 162 ч
+                  - generic [ref=e309]:
+                    - generic [ref=e310]: Calyx
+                    - generic [ref=e311]: 93 ч
+                  - generic [ref=e315]:
+                    - generic [ref=e316]: hades
+                    - generic [ref=e317]: 69 ч
+                  - generic [ref=e321]:
+                    - generic [ref=e322]: woxic
+                    - generic [ref=e323]: 177 ч
+                  - generic [ref=e327]:
+                    - generic [ref=e328]: b0RUP
+                    - generic [ref=e329]: 199 ч
+                  - generic [ref=e333]:
+                    - generic [ref=e334]: frozen
+                    - generic [ref=e335]: 143 ч
+                - text: →
+              - button "Авторизоваться" [ref=e337] [cursor=pointer]
+            - link "Создать лобби MATCHES MATCHES 1374 В игре" [ref=e338] [cursor=pointer]:
+              - /url: /ru/matches
+              - generic [ref=e339]:
+                - generic:
+                  - paragraph: Создать лобби
+                - img "MATCHES" [ref=e343]
+                - generic: MATCHES
+                - generic [ref=e344]: 1374 В игре
+            - link "DM DM 2189 В игре" [ref=e345] [cursor=pointer]:
+              - /url: /ru/cs2/servers/dm
+              - generic [ref=e346]:
+                - img "DM" [ref=e349]
+                - generic: DM
+                - generic [ref=e350]: 2189 В игре
+            - link "DUELS DUELS 2789 В игре" [ref=e351] [cursor=pointer]:
+              - /url: /ru/cs2/servers/duels
+              - generic [ref=e352]:
+                - img "DUELS" [ref=e355]
+                - generic: DUELS
+                - generic [ref=e356]: 2789 В игре
+            - link "RETAKE RETAKE 1045 В игре" [ref=e357] [cursor=pointer]:
+              - /url: /ru/cs2/servers/retake
+              - generic [ref=e358]:
+                - img "RETAKE" [ref=e361]
+                - generic: RETAKE
+                - generic [ref=e362]: 1045 В игре
+            - link "RETAKECARDS RETAKE CARDS 12 В игре" [ref=e363] [cursor=pointer]:
+              - /url: /ru/cs2/servers/retakecards
+              - generic [ref=e364]:
+                - img "RETAKECARDS" [ref=e367]
+                - generic: RETAKE CARDS
+                - generic [ref=e368]: 12 В игре
+            - link "5X5 5X5 787 В игре" [ref=e369] [cursor=pointer]:
+              - /url: /ru/cs2/servers/5x5
+              - generic [ref=e370]:
+                - img "5X5" [ref=e373]
+                - generic: 5X5
+                - generic [ref=e374]: 787 В игре
+            - link "2X2 2X2 128 В игре" [ref=e375] [cursor=pointer]:
+              - /url: /ru/cs2/servers/2x2
+              - generic [ref=e376]:
+                - img "2X2" [ref=e379]
+                - generic: 2X2
+                - generic [ref=e380]: 128 В игре
+            - link "BHOP BHOP 587 В игре" [ref=e381] [cursor=pointer]:
+              - /url: /ru/cs2/servers/bhop
+              - generic [ref=e382]:
+                - img "BHOP" [ref=e385]
+                - generic: BHOP
+                - generic [ref=e386]: 587 В игре
+            - link "SURF SURF 392 В игре" [ref=e387] [cursor=pointer]:
+              - /url: /ru/cs2/servers/surf
+              - generic [ref=e388]:
+                - img "SURF" [ref=e391]
+                - generic: SURF
+                - generic [ref=e392]: 392 В игре
+            - link "KZ KZ 1449 В игре" [ref=e393] [cursor=pointer]:
+              - /url: /ru/cs2/servers/kz
+              - generic [ref=e394]:
+                - img "KZ" [ref=e397]
+                - generic: KZ
+                - generic [ref=e398]: 1449 В игре
+            - link "PUBLIC PUBLIC 160 В игре" [ref=e399] [cursor=pointer]:
+              - /url: /ru/cs2/servers/public
+              - generic [ref=e400]:
+                - img "PUBLIC" [ref=e403]
+                - generic: PUBLIC
+                - generic [ref=e404]: 160 В игре
+            - link "AWP AWP 188 В игре" [ref=e405] [cursor=pointer]:
+              - /url: /ru/cs2/servers/awp
+              - generic [ref=e406]:
+                - img "AWP" [ref=e409]
+                - generic: AWP
+                - generic [ref=e410]: 188 В игре
+            - link "DUELS2X2 DUELS 2X2 147 В игре" [ref=e411] [cursor=pointer]:
+              - /url: /ru/cs2/servers/duels2x2
+              - generic [ref=e412]:
+                - img "DUELS2X2" [ref=e415]
+                - generic: DUELS 2X2
+                - generic [ref=e416]: 147 В игре
+            - link "EXECUTE EXECUTE 124 В игре" [ref=e417] [cursor=pointer]:
+              - /url: /ru/cs2/servers/execute
+              - generic [ref=e418]:
+                - img "EXECUTE" [ref=e421]
+                - generic: EXECUTE
+                - generic [ref=e422]: 124 В игре
+            - link "CLUTCH CLUTCH 109 В игре" [ref=e423] [cursor=pointer]:
+              - /url: /ru/cs2/servers/clutch
+              - generic [ref=e424]:
+                - img "CLUTCH" [ref=e427]
+                - generic: CLUTCH
+                - generic [ref=e428]: 109 В игре
+            - link "PISTOLRETAKE PISTOL RETAKE 48 В игре" [ref=e429] [cursor=pointer]:
+              - /url: /ru/cs2/servers/pistolretake
+              - generic [ref=e430]:
+                - img "PISTOLRETAKE" [ref=e433]
+                - generic: PISTOL RETAKE
+                - generic [ref=e434]: 48 В игре
+            - link "ARENA ARENA 49 В игре" [ref=e435] [cursor=pointer]:
+              - /url: /ru/cs2/servers/arena
+              - generic [ref=e436]:
+                - img "ARENA" [ref=e439]
+                - generic: ARENA
+                - generic [ref=e440]: 49 В игре
+            - link "MULTICFGDM MULTICFG 155 В игре" [ref=e441] [cursor=pointer]:
+              - /url: /ru/cs2/servers/multicfgdm
+              - generic [ref=e442]:
+                - img "MULTICFGDM" [ref=e445]
+                - generic: MULTICFG
+                - generic [ref=e446]: 155 В игре
+            - link "PISTOLDM PISTOLDM 227 В игре" [ref=e447] [cursor=pointer]:
+              - /url: /ru/cs2/servers/pistoldm
+              - generic [ref=e448]:
+                - img "PISTOLDM" [ref=e451]
+                - generic: PISTOLDM
+                - generic [ref=e452]: 227 В игре
+            - link "HSDM HSDM 121 В игре" [ref=e453] [cursor=pointer]:
+              - /url: /ru/cs2/servers/hsdm
+              - generic [ref=e454]:
+                - img "HSDM" [ref=e457]
+                - generic: HSDM
+                - generic [ref=e458]: 121 В игре
+            - link "AWPDM AWPDM 106 В игре" [ref=e459] [cursor=pointer]:
+              - /url: /ru/cs2/servers/awpdm
+              - generic [ref=e460]:
+                - img "AWPDM" [ref=e463]
+                - generic: AWPDM
+                - generic [ref=e464]: 106 В игре
+            - link "AIMDM AIMDM 33 В игре" [ref=e465] [cursor=pointer]:
+              - /url: /ru/cs2/servers/aimdm
+              - generic [ref=e466]:
+                - img "AIMDM" [ref=e469]
+                - generic: AIMDM
+                - generic [ref=e470]: 33 В игре
+            - link "JAIL JAIL 39 В игре" [ref=e471] [cursor=pointer]:
+              - /url: /ru/cs2/servers/jail
+              - generic [ref=e472]:
+                - img "JAIL" [ref=e475]
+                - generic: JAIL
+                - generic [ref=e476]: 39 В игре
+            - link "MANIAC MANIAC 62 В игре" [ref=e477] [cursor=pointer]:
+              - /url: /ru/cs2/servers/maniac
+              - generic [ref=e478]:
+                - img "MANIAC" [ref=e481]
+                - generic: MANIAC
+                - generic [ref=e482]: 62 В игре
+            - link "DEATHRUN DEATHRUN 32 В игре" [ref=e483] [cursor=pointer]:
+              - /url: /ru/cs2/servers/deathrun
+              - generic [ref=e484]:
+                - img "DEATHRUN" [ref=e487]
+                - generic: DEATHRUN
+                - generic [ref=e488]: 32 В игре
+            - link "MINIGAMES MINIGAMES 1 В игре" [ref=e489] [cursor=pointer]:
+              - /url: /ru/cs2/servers/minigames
+              - generic [ref=e490]:
+                - img "MINIGAMES" [ref=e493]
+                - generic: MINIGAMES
+                - generic [ref=e494]: 1 В игре
+            - link "HNS HNS 57 В игре" [ref=e495] [cursor=pointer]:
+              - /url: /ru/cs2/servers/hns
+              - generic [ref=e496]:
+                - img "HNS" [ref=e499]
+                - generic: HNS
+                - generic [ref=e500]: 57 В игре
+            - link "SURFCOMBAT SURF COMBAT 19 В игре" [ref=e501] [cursor=pointer]:
+              - /url: /ru/cs2/servers/surfcombat
+              - generic [ref=e502]:
+                - img "SURFCOMBAT" [ref=e505]
+                - generic: SURF COMBAT
+                - generic [ref=e506]: 19 В игре
+            - link "LOUNGE SKIN INSPECT 89 В игре" [ref=e507] [cursor=pointer]:
+              - /url: /ru/cs2/servers/lounge
+              - generic [ref=e508]:
+                - img "LOUNGE" [ref=e511]
+                - generic: SKIN INSPECT
+                - generic [ref=e512]: 89 В игре
+      - generic [ref=e513]:
+        - link "SkinRave" [ref=e516] [cursor=pointer]:
+          - /url: https://skinrave.gg/en?r=CYBERSHOKE
+          - img "SkinRave" [ref=e517]
+        - generic [ref=e518]:
+          - generic [ref=e519]:
+            - link "Cybershoke" [ref=e520] [cursor=pointer]:
+              - /url: https://cybershoke.net
+              - img "Cybershoke" [ref=e521]
+            - generic [ref=e522]:
+              - heading "Copyright © 2019–2026" [level=5] [ref=e523]
+              - heading "CYBERSHOKE ESPORTS LIMITED" [level=6] [ref=e524]
+              - text: Room 8, S-V, 6/F, Valiant Industrial Centre, 2-12 Au Pui Wan Street, Fo Tan, New Territories, Hong Kong
+          - generic [ref=e525]:
+            - generic [ref=e526]:
+              - list [ref=e527]:
+                - link "Играть" [ref=e528] [cursor=pointer]:
+                  - /url: /ru/
+                  - listitem [ref=e529]: Играть
+                - link "Миссии" [ref=e530] [cursor=pointer]:
+                  - /url: /ru/missions
+                  - listitem [ref=e531]: Миссии
+                - link "Лидерборд" [ref=e532] [cursor=pointer]:
+                  - /url: /ru/cs2/leaderboard
+                  - listitem [ref=e533]: Лидерборд
+                - link "PREMIUM" [ref=e534] [cursor=pointer]:
+                  - /url: /ru/premium
+                  - listitem [ref=e535]: PREMIUM
+              - list [ref=e536]:
+                - link "Магазин" [ref=e537] [cursor=pointer]:
+                  - /url: /ru/shop
+                  - listitem [ref=e538]: Магазин
+                - link "Помощь" [ref=e539] [cursor=pointer]:
+                  - /url: /ru/learn
+                  - listitem [ref=e540]: Помощь
+                - link "Контакты" [ref=e541] [cursor=pointer]:
+                  - /url: /ru/contacts
+                  - listitem [ref=e542]: Контакты
+                - link "Бренд" [ref=e543] [cursor=pointer]:
+                  - /url: /ru/brand
+                  - listitem [ref=e544]: Бренд
+              - list [ref=e545]:
+                - link "Политика конфиденциальности" [ref=e546] [cursor=pointer]:
+                  - /url: /ru/policy
+                  - listitem [ref=e547]: Политика конфиденциальности
+                - link "Лицензионное соглашение" [ref=e548] [cursor=pointer]:
+                  - /url: /ru/terms
+                  - listitem [ref=e549]: Лицензионное соглашение
+                - link "Правила проекта" [ref=e550] [cursor=pointer]:
+                  - /url: /ru/learn/181
+                  - listitem [ref=e551]: Правила проекта
+                - link "Блог" [ref=e552] [cursor=pointer]:
+                  - /url: https://cybershoke.net/ru/blog
+                  - listitem [ref=e553]: Блог
+            - generic [ref=e554]:
+              - generic [ref=e555]:
+                - link "Steam" [ref=e556] [cursor=pointer]:
+                  - /url: https://steamcommunity.com/groups/cybershokesteam
+                  - img "Steam" [ref=e557]
+                - link "VK" [ref=e558] [cursor=pointer]:
+                  - /url: https://vk.com/cybershoke
+                  - img "VK" [ref=e559]
+                - link "Discord" [ref=e560] [cursor=pointer]:
+                  - /url: https://discord.gg/cybershoke
+                  - img "Discord" [ref=e561]
+                - link "Telegram" [ref=e562] [cursor=pointer]:
+                  - /url: https://t.me/cybershoke
+                  - img "Telegram" [ref=e563]
+                - link "YouTube" [ref=e564] [cursor=pointer]:
+                  - /url: https://bit.ly/3e1SrIH
+                  - img "YouTube" [ref=e565]
+              - generic [ref=e566]:
+                - img [ref=e567]
+                - img [ref=e571]
+              - button "ru Русский" [ref=e578] [cursor=pointer]:
+                - generic [ref=e579]:
+                  - img "ru" [ref=e580]
+                  - text: Русский
+                - img [ref=e581]

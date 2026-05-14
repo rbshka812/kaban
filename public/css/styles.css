@@ -1,0 +1,106 @@
+:root {
+  --bg: #0d0f12;
+  --bg-elev: #15181d;
+  --border: #2a2f37;
+  --text: #e6e9ee;
+  --text-dim: #8a93a0;
+  --accent: #ff5722;
+  --accent-dim: #b8401a;
+  --success: #4ade80;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  min-height: 100vh;
+}
+
+.landing {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.landing h1 {
+  font-size: 32px;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+.subtitle {
+  color: var(--text-dim);
+  margin: 0 0 32px;
+}
+
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+ol, ul { padding-left: 24px; margin: 0; }
+ol li, ul li { margin-bottom: 10px; }
+
+.install-btn {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  margin: 8px 0 4px;
+  transition: background 0.15s;
+}
+.install-btn:hover { background: var(--accent-dim); }
+
+small {
+  color: var(--text-dim);
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+code {
+  background: rgba(255,255,255,0.06);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+}
+
+pre {
+  background: #0a0c10;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-size: 13px;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer small { color: var(--text-dim); font-size: 12px; }
