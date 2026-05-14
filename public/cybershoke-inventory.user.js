@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.2.0
+// @version      0.3.0
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
-// @connect      *
+// @connect      steamcommunity.com
+// @connect      api.skinport.com
 // @run-at       document-idle
 // @noframes
 // ==/UserScript==
@@ -16,55 +17,179 @@
   'use strict';
 
   // === CONFIG ===
-  const BACKEND_URL = localStorage.getItem('csli_backend') || 'http://localhost:3000';
+  const PRICE_CACHE_KEY  = 'csli_prices_v1';
+  const PRICE_TTL_MS     = 60 * 60 * 1000; // 1h
+  const INV_CACHE_PREFIX = 'csli_inv_v1_';
+  const INV_TTL_MS       = 60 * 60 * 1000; // 1h
+  const STEAM_CONCURRENCY = 3;
 
   const log = (...a) => console.log('%c[csli]', 'color:#ff5722;font-weight:bold', ...a);
 
-  // Expose setter so user can change backend URL from DevTools
-  const setBackend = (url) => {
-    localStorage.setItem('csli_backend', url);
-    log('Backend URL set:', url, '— reload page to apply');
-  };
-  try { unsafeWindow.csliSetBackend = setBackend; } catch {}
-  window.csliSetBackend = setBackend;
+  // === LocalStorage cache helpers (with TTL) ===
+  function readCache(key, ttlMs) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const { v, t } = JSON.parse(raw);
+      if (Date.now() - t > ttlMs) { localStorage.removeItem(key); return null; }
+      return v;
+    } catch { return null; }
+  }
+  function writeCache(key, value) {
+    try { localStorage.setItem(key, JSON.stringify({ v: value, t: Date.now() })); }
+    catch (e) { log('cache write failed (probably quota):', e.message); }
+  }
 
-  // === Inserted styles ===
+  // === GM_xmlhttpRequest promisified (bypasses CORS + uses user's home IP) ===
+  function gmFetchJSON(url) {
+    return new Promise((resolve, reject) => {
+      GM_xmlhttpRequest({
+        method: 'GET',
+        url,
+        timeout: 30000,
+        onload: (r) => {
+          if (r.status >= 200 && r.status < 300) {
+            try { resolve(JSON.parse(r.responseText)); }
+            catch (e) { reject(new Error('Bad JSON: ' + e.message)); }
+          } else {
+            const err = new Error('HTTP ' + r.status);
+            err.status = r.status;
+            reject(err);
+          }
+        },
+        onerror: () => reject(new Error('Network error: ' + url)),
+        ontimeout: () => reject(new Error('Timeout: ' + url)),
+      });
+    });
+  }
+
+  // === Skinport prices ===
+  let priceMap = null;
+  let priceMapLoading = null;
+  async function getPriceMap() {
+    if (priceMap) return priceMap;
+    if (priceMapLoading) return priceMapLoading;
+    const cached = readCache(PRICE_CACHE_KEY, PRICE_TTL_MS);
+    if (cached) {
+      priceMap = new Map(cached);
+      log('Loaded ' + priceMap.size + ' prices from cache');
+      return priceMap;
+    }
+    priceMapLoading = (async () => {
+      log('Fetching prices from Skinport…');
+      const t0 = Date.now();
+      const arr = await gmFetchJSON('https://api.skinport.com/v1/items?app_id=730&currency=USD&tradable=0');
+      const m = new Map();
+      for (const item of arr) {
+        const price = item.suggested_price ?? item.mean_price ?? item.min_price;
+        if (item.market_hash_name && typeof price === 'number') {
+          m.set(item.market_hash_name, price);
+        }
+      }
+      writeCache(PRICE_CACHE_KEY, [...m]);
+      priceMap = m;
+      priceMapLoading = null;
+      log('Loaded ' + m.size + ' prices from Skinport in ' + (Date.now() - t0) + 'ms');
+      return m;
+    })().catch((e) => {
+      priceMapLoading = null;
+      throw e;
+    });
+    return priceMapLoading;
+  }
+
+  // === Steam inventory fetch ===
+  async function fetchSteamInventory(steamid64) {
+    const cacheKey = INV_CACHE_PREFIX + steamid64;
+    const cached = readCache(cacheKey, INV_TTL_MS);
+    if (cached) return cached;
+
+    const url = 'https://steamcommunity.com/inventory/' + steamid64 + '/730/2?l=english&count=5000';
+    let json;
+    try {
+      json = await gmFetchJSON(url);
+    } catch (e) {
+      if (e.status === 401 || e.status === 403) {
+        const r = { is_private: true };
+        writeCache(cacheKey, r);
+        return r;
+      }
+      if (e.status === 429) return { error: 'rate_limited' };
+      return { error: e.message };
+    }
+
+    if (!json || json.success === false) {
+      const r = { is_private: true };
+      writeCache(cacheKey, r);
+      return r;
+    }
+    if (!Array.isArray(json.descriptions)) {
+      const r = { is_private: false, items: [] };
+      writeCache(cacheKey, r);
+      return r;
+    }
+
+    const descByKey = new Map();
+    for (const d of json.descriptions) {
+      if (d?.market_hash_name) {
+        descByKey.set(d.classid + '_' + d.instanceid, d.market_hash_name);
+      }
+    }
+    const items = [];
+    for (const a of json.assets || []) {
+      const name = descByKey.get(a.classid + '_' + a.instanceid);
+      if (name) items.push(name);
+    }
+    const result = { is_private: false, items };
+    writeCache(cacheKey, result);
+    return result;
+  }
+
+  // === Sum item prices ===
+  function sumItems(items, prices) {
+    let total = 0, counted = 0, missing = 0;
+    for (const name of items) {
+      const p = prices.get(name);
+      if (typeof p === 'number') { total += p; counted++; }
+      else missing++;
+    }
+    return { total_usd: Math.round(total * 100) / 100, counted, missing };
+  }
+
+  // === Concurrency-limited parallel ===
+  async function withConcurrency(items, n, fn) {
+    let idx = 0;
+    async function worker() {
+      while (idx < items.length) {
+        const i = idx++;
+        try { await fn(items[i], i); } catch (e) { log('worker error', e); }
+      }
+    }
+    await Promise.all(Array.from({ length: n }, worker));
+  }
+
+  // === Inject CSS ===
   const style = document.createElement('style');
   style.textContent = `
     .csli-badge {
-      display: inline-block;
-      padding: 1px 6px;
-      margin-left: 6px;
-      background: rgba(255,87,34,0.15);
-      color: #ff7043;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-      vertical-align: middle;
+      display: inline-block; padding: 1px 6px; margin-left: 6px;
+      background: rgba(255,87,34,0.15); color: #ff7043;
+      border-radius: 4px; font-size: 11px; font-weight: 600;
+      font-variant-numeric: tabular-nums; vertical-align: middle;
     }
     .csli-badge.private { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; }
     .csli-badge.loading { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; }
     .csli-badge.error { background: rgba(248,113,113,0.15); color: #f87171; }
     .csli-total-panel {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 99999;
-      background: #15181d;
-      border: 1px solid #ff5722;
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: #e6e9ee;
-      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-      font-size: 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      min-width: 220px;
+      position: fixed; bottom: 20px; right: 20px; z-index: 99999;
+      background: #15181d; border: 1px solid #ff5722; border-radius: 8px;
+      padding: 12px 16px; color: #e6e9ee;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5); min-width: 220px;
     }
     .csli-total-panel .csli-label {
       font-size: 11px; color: #8a93a0;
-      text-transform: uppercase; letter-spacing: 0.06em;
-      margin-bottom: 4px;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
     }
     .csli-total-panel .csli-value {
       font-size: 22px; font-weight: 600; color: #ff5722;
@@ -80,34 +205,8 @@
   `;
   document.head.appendChild(style);
 
-  // === State ===
-  let currentServerKey = null;
+  // === Panel ===
   let panel = null;
-
-  // === Backend call via GM_xmlhttpRequest (bypasses CORS) ===
-  function postBatch(steamids) {
-    return new Promise((resolve, reject) => {
-      GM_xmlhttpRequest({
-        method: 'POST',
-        url: BACKEND_URL + '/api/inventory-batch',
-        headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify({ steamids }),
-        timeout: 60000,
-        onload: (r) => {
-          if (r.status >= 200 && r.status < 300) {
-            try { resolve(JSON.parse(r.responseText)); }
-            catch (e) { reject(new Error('Bad JSON: ' + e.message)); }
-          } else {
-            reject(new Error('HTTP ' + r.status + ': ' + (r.responseText || '').slice(0, 200)));
-          }
-        },
-        onerror: () => reject(new Error('Network error reaching ' + BACKEND_URL)),
-        ontimeout: () => reject(new Error('Backend timeout')),
-      });
-    });
-  }
-
-  // === UI: total panel ===
   function showPanel() {
     if (panel) return;
     panel = document.createElement('div');
@@ -129,8 +228,8 @@
     if (panel) { panel.remove(); panel = null; }
   }
 
-  // === Fetch player list (same-origin, uses your Cybershoke session cookies) ===
-  async function fetchServerPlayers(ip, port) {
+  // === Fetch player list from Cybershoke ===
+  async function fetchCybershokePlayers(ip, port) {
     const r = await fetch('/api/servers/data', {
       method: 'POST',
       credentials: 'include',
@@ -142,7 +241,28 @@
     return j.playersv2 || [];
   }
 
-  // === Main handler when a server modal opens ===
+  // === Badge inject ===
+  function injectBadge(modal, nick) {
+    for (const td of modal.querySelectorAll('td')) {
+      if ((td.textContent || '').trim() === nick) {
+        let b = td.querySelector('.csli-badge');
+        if (b) return b;
+        b = document.createElement('span');
+        b.className = 'csli-badge loading';
+        b.textContent = '…';
+        td.appendChild(b);
+        return b;
+      }
+    }
+    return null;
+  }
+
+  // === State ===
+  let currentServerKey = null;
+  let totalUsd = 0;
+  let done = 0, plannedTotal = 0;
+
+  // === Main per-server handler ===
   async function handleServerOpen(modal, ip, port) {
     const key = ip + ':' + port;
     if (currentServerKey === key) return;
@@ -150,99 +270,77 @@
     log('Server opened:', key);
 
     showPanel();
-    updatePanel({ total: 0, progress: 'Загрузка игроков…' });
+    totalUsd = 0; done = 0; plannedTotal = 0;
+    updatePanel({ total: 0, progress: 'Загрузка игроков и цен…' });
+
+    // Kick off prices fetch in parallel with player fetch
+    const pricesP = getPriceMap().catch(e => { log('prices error', e); return new Map(); });
 
     let players;
     try {
-      players = await fetchServerPlayers(ip, port);
+      players = await fetchCybershokePlayers(ip, port);
     } catch (e) {
-      log('fetchServerPlayers error', e);
-      updatePanel({ progress: 'Ошибка: ' + e.message });
+      log('cybershoke error', e);
+      updatePanel({ progress: 'Cybershoke: ' + e.message });
       return;
     }
+
     const withIds = players.filter(p => p.steamid64);
     log(withIds.length + '/' + players.length + ' players have steamid64');
-
     if (withIds.length === 0) {
-      updatePanel({ progress: 'Игроки без SteamID. Залогиньтесь на Cybershoke.' });
+      updatePanel({ progress: 'У игроков нет SteamID. Залогиньтесь на Cybershoke.' });
       return;
     }
 
-    // Inject loading badges
+    // Initialize badges
     const badges = new Map();
     for (const p of withIds) {
       const b = injectBadge(modal, p.name);
-      if (b) {
-        b.textContent = '…';
-        b.className = 'csli-badge loading';
-        badges.set(p.steamid64, b);
-      }
+      if (b) badges.set(p.steamid64, b);
     }
 
-    updatePanel({ progress: 'Запрос инвентарей (' + withIds.length + ')…' });
+    // Wait for prices
+    const prices = await pricesP;
+    log('Prices ready: ' + prices.size + ' items');
 
-    let resp;
-    try {
-      resp = await postBatch(withIds.map(p => p.steamid64));
-    } catch (e) {
-      log('postBatch error', e);
-      updatePanel({ progress: 'Backend ошибка: ' + e.message });
-      return;
-    }
+    plannedTotal = withIds.length;
+    updatePanel({ progress: '0/' + plannedTotal + ' инвентарей загружено' });
 
+    // Stats counters
     let priced = 0, priv = 0, errs = 0;
-    for (const p of withIds) {
-      const r = resp.results[p.steamid64];
+
+    await withConcurrency(withIds, STEAM_CONCURRENCY, async (p) => {
+      if (currentServerKey !== key) return; // user switched servers
       const b = badges.get(p.steamid64);
-      if (!r) {
-        if (b) { b.className = 'csli-badge error'; b.textContent = '?'; }
-        continue;
-      }
-      if (r.is_private) {
+      const inv = await fetchSteamInventory(p.steamid64);
+      if (currentServerKey !== key) return;
+      if (inv.is_private) {
         if (b) { b.className = 'csli-badge private'; b.textContent = '🔒'; }
         priv++;
-      } else if (r.error) {
-        if (b) { b.className = 'csli-badge error'; b.textContent = '!'; }
+      } else if (inv.error) {
+        if (b) { b.className = 'csli-badge error'; b.textContent = '!'; b.title = inv.error; }
         errs++;
       } else {
-        if (b) { b.className = 'csli-badge'; b.textContent = '$' + r.total_usd.toFixed(0); }
+        const { total_usd } = sumItems(inv.items, prices);
+        if (b) { b.className = 'csli-badge'; b.textContent = '$' + total_usd.toFixed(0); }
+        totalUsd += total_usd;
         priced++;
       }
-    }
-
-    updatePanel({
-      total: resp.total_usd || 0,
-      progress: priced + ' 💰 · ' + priv + ' 🔒 · ' + errs + ' ! · ' + withIds.length + ' всего',
+      done++;
+      updatePanel({
+        total: totalUsd,
+        progress: done + '/' + plannedTotal + ' · ' + priced + ' 💰 · ' + priv + ' 🔒 · ' + errs + ' !',
+      });
     });
+
+    log('Done. Total $' + totalUsd.toFixed(2));
   }
 
-  // === Find player nick in modal table and inject badge ===
-  function injectBadge(modal, nick) {
-    for (const td of modal.querySelectorAll('td')) {
-      const text = (td.textContent || '').trim();
-      // Take the first cell whose text exactly matches the nickname
-      if (text === nick) {
-        // Avoid duplicate
-        let badge = td.querySelector('.csli-badge');
-        if (badge) return badge;
-        badge = document.createElement('span');
-        badge.className = 'csli-badge loading';
-        badge.textContent = '…';
-        td.appendChild(badge);
-        return badge;
-      }
-    }
-    return null;
-  }
-
-  // === Extract IP:port from modal DOM ===
-  // Modal text contains "IP 217.182.199.30:28015"
+  // === Detect server modal via DOM ===
   function extractIpPort(modal) {
     const m = (modal.innerText || '').match(/IP\s+(\d{1,3}(?:\.\d{1,3}){3})[:\s]+(\d{1,5})/);
     return m ? { ip: m[1], port: m[2] } : null;
   }
-
-  // === Watch for server modal appearing/disappearing ===
   let pendingTimer = null;
   function checkForModal() {
     const modal = document.querySelector('.modal__overlay_SERVER_MODAL');
@@ -254,24 +352,17 @@
       }
       return;
     }
-    // Wait briefly for IP and player list to render
     if (pendingTimer) return;
     pendingTimer = setTimeout(() => {
       pendingTimer = null;
       const ipPort = extractIpPort(modal);
-      if (!ipPort) {
-        log('Modal open but no IP found in DOM yet (will retry on next mutation)');
-        return;
-      }
+      if (!ipPort) return;
       handleServerOpen(modal, ipPort.ip, ipPort.port);
     }, 600);
   }
-
   const observer = new MutationObserver(checkForModal);
   observer.observe(document.body, { childList: true, subtree: true });
-  // Also check once on script load (in case modal is already open)
   checkForModal();
 
-  log('Cybershoke Inventory Live ready. Backend:', BACKEND_URL);
-  log('Change backend: csliSetBackend("https://your-app.vercel.app") or set localStorage.csli_backend');
+  log('Cybershoke Inventory Live v0.3.0 ready (all-client architecture).');
 })();
