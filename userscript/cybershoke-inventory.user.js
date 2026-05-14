@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.4.5
+// @version      0.5.0
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -19,8 +19,7 @@
   'use strict';
 
   // === CONFIG ===
-  // Skinport prices are kept in memory only (too big for localStorage when combined with inventories).
-  const INV_CACHE_PREFIX = 'csli_inv_v1_';
+  // Skinport prices: memory only. Inventories: IndexedDB (see below).
   // Backend used as a fallback when client-side Skinport call fails (VPN/blocked IP).
   const BACKEND_URL = localStorage.getItem('csli_backend') || 'https://kaban-dun.vercel.app';
   const INV_TTL_MS       = 60 * 60 * 1000; // 1h
@@ -28,31 +27,88 @@
 
   const log = (...a) => console.log('%c[csli]', 'color:#ff5722;font-weight:bold', ...a);
 
-  // Expose cache-clear helper to DevTools
-  const clearCache = () => {
+  // === IndexedDB inventory cache ===
+  // Why IDB and not localStorage: inventories accumulate to >5MB which trips quota.
+  // IDB has 50%+ disk quota (usually GBs) and is also async — fits our codebase.
+  const IDB_NAME = 'csli';
+  const IDB_STORE = 'inv';
+  let _idbPromise = null;
+  function openIDB() {
+    if (_idbPromise) return _idbPromise;
+    _idbPromise = new Promise((resolve, reject) => {
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) {
+          db.createObjectStore(IDB_STORE, { keyPath: 'sid' });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror  = () => reject(req.error);
+    }).catch(e => { _idbPromise = null; throw e; });
+    return _idbPromise;
+  }
+  async function idbGetInv(sid) {
+    try {
+      const db = await openIDB();
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const req = tx.objectStore(IDB_STORE).get(sid);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror  = () => reject(req.error);
+      });
+    } catch { return null; }
+  }
+  async function idbSetInv(sid, value) {
+    try {
+      const db = await openIDB();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).put({ sid, value, t: Date.now() });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } catch (e) {
+      log('IDB write failed:', e?.message || e);
+    }
+  }
+  async function idbClearAll() {
+    try {
+      const db = await openIDB();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    } catch (e) {
+      log('IDB clear failed:', e?.message || e);
+    }
+  }
+
+  // Sweep stale localStorage inventory keys from v0.4.x (frees ~1-3 MB)
+  (function migrateOldCache() {
     let n = 0;
     for (const k of Object.keys(localStorage)) {
-      if (k.startsWith('csli_')) { localStorage.removeItem(k); n++; }
+      if (k.startsWith('csli_inv_v1_') || k === 'csli_prices_v1') {
+        localStorage.removeItem(k);
+        n++;
+      }
     }
-    log('Cleared ' + n + ' cache entries. Reload page to refetch.');
+    if (n > 0) log('Migrated to IndexedDB — cleared ' + n + ' legacy localStorage entries');
+  })();
+
+  // Expose cache-clear helper to DevTools (clears IDB + any leftover localStorage csli_* keys)
+  const clearCache = async () => {
+    await idbClearAll();
+    let n = 0;
+    for (const k of Object.keys(localStorage)) {
+      if (k.startsWith('csli_') && k !== 'csli_backend') { localStorage.removeItem(k); n++; }
+    }
+    log('Cleared IndexedDB inventory cache' + (n ? ' + ' + n + ' localStorage entries' : '') + '. Reload to refetch.');
   };
   try { unsafeWindow.csliClearCache = clearCache; } catch {}
   window.csliClearCache = clearCache;
-
-  // === LocalStorage cache helpers (with TTL) ===
-  function readCache(key, ttlMs) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      const { v, t } = JSON.parse(raw);
-      if (Date.now() - t > ttlMs) { localStorage.removeItem(key); return null; }
-      return v;
-    } catch { return null; }
-  }
-  function writeCache(key, value) {
-    try { localStorage.setItem(key, JSON.stringify({ v: value, t: Date.now() })); }
-    catch (e) { log('cache write failed (probably quota):', e.message); }
-  }
 
   // === GM_xmlhttpRequest promisified (bypasses CORS + uses user's home IP) ===
   function gmFetchJSON(url) {
@@ -129,9 +185,8 @@
   //   403 (often transient IP block): 1 retry after 1.5s, then mark private
   //   other (400/5xx/network): no retry, return error
   async function fetchSteamInventory(steamid64) {
-    const cacheKey = INV_CACHE_PREFIX + steamid64;
-    const cached = readCache(cacheKey, INV_TTL_MS);
-    if (cached) return cached;
+    const cached = await idbGetInv(steamid64);
+    if (cached && (Date.now() - cached.t) < INV_TTL_MS) return cached.value;
 
     // Steam: count=5000 gives HTTP 400 for anonymous; 2000 works in 2026.
     const url = 'https://steamcommunity.com/inventory/' + steamid64 + '/730/2?l=english&count=2000';
@@ -148,7 +203,7 @@
       } catch (e) {
         if (e.status === 401) {
           const r = { is_private: true };
-          writeCache(cacheKey, r);
+          await idbSetInv(steamid64, r);
           return r;
         }
         if (e.status === 429 && attempt < MAX_429) {
@@ -166,7 +221,7 @@
         log('[steam ' + steamid64 + '] http error', e.status || '?', e.message);
         if (e.status === 403) {
           const r = { is_private: true };
-          writeCache(cacheKey, r);
+          await idbSetInv(steamid64, r);
           return r;
         }
         if (e.status === 429) return { error: 'rate_limited' };
@@ -177,13 +232,13 @@
     if (!json || json.success === false) {
       log('[steam ' + steamid64 + '] success=false → private');
       const r = { is_private: true };
-      writeCache(cacheKey, r);
+      await idbSetInv(steamid64, r);
       return r;
     }
     if (!Array.isArray(json.descriptions)) {
       log('[steam ' + steamid64 + '] no descriptions array — empty inventory');
       const r = { is_private: false, items: [] };
-      writeCache(cacheKey, r);
+      await idbSetInv(steamid64, r);
       return r;
     }
 
@@ -205,7 +260,7 @@
     }
     const result = { is_private: false, items };
     log('[steam ' + steamid64 + '] OK — ' + items.length + ' items');
-    writeCache(cacheKey, result);
+    await idbSetInv(steamid64, result);
     return result;
   }
 
@@ -604,6 +659,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.4.5 ready.');
+  log('Cybershoke Inventory Live v0.5.0 ready (IndexedDB cache).');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
