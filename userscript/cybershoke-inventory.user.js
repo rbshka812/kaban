@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.4.4
+// @version      0.4.5
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -120,7 +120,14 @@
     return priceMapLoading;
   }
 
+  // === Sleep helper ===
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
   // === Steam inventory fetch ===
+  // Retry policy:
+  //   429 (rate-limited): up to 3 attempts, exponential backoff (2s → 4s → 8s)
+  //   403 (often transient IP block): 1 retry after 1.5s, then mark private
+  //   other (400/5xx/network): no retry, return error
   async function fetchSteamInventory(steamid64) {
     const cacheKey = INV_CACHE_PREFIX + steamid64;
     const cached = readCache(cacheKey, INV_TTL_MS);
@@ -128,18 +135,43 @@
 
     // Steam: count=5000 gives HTTP 400 for anonymous; 2000 works in 2026.
     const url = 'https://steamcommunity.com/inventory/' + steamid64 + '/730/2?l=english&count=2000';
+
     let json;
-    try {
-      json = await gmFetchJSON(url);
-    } catch (e) {
-      log('[steam ' + steamid64 + '] http error', e.status || '?', e.message);
-      if (e.status === 401 || e.status === 403) {
-        const r = { is_private: true };
-        writeCache(cacheKey, r);
-        return r;
+    let attempt = 0;
+    const MAX_429 = 3;
+    let tried403 = false;
+    while (true) {
+      attempt++;
+      try {
+        json = await gmFetchJSON(url);
+        break;
+      } catch (e) {
+        if (e.status === 401) {
+          const r = { is_private: true };
+          writeCache(cacheKey, r);
+          return r;
+        }
+        if (e.status === 429 && attempt < MAX_429) {
+          const wait = 1000 * Math.pow(2, attempt); // 2s, 4s, 8s
+          log('[steam ' + steamid64 + '] 429 retry ' + attempt + '/' + MAX_429 + ' in ' + wait + 'ms');
+          await sleep(wait);
+          continue;
+        }
+        if (e.status === 403 && !tried403) {
+          tried403 = true;
+          log('[steam ' + steamid64 + '] 403 retry in 1500ms');
+          await sleep(1500);
+          continue;
+        }
+        log('[steam ' + steamid64 + '] http error', e.status || '?', e.message);
+        if (e.status === 403) {
+          const r = { is_private: true };
+          writeCache(cacheKey, r);
+          return r;
+        }
+        if (e.status === 429) return { error: 'rate_limited' };
+        return { error: e.message };
       }
-      if (e.status === 429) return { error: 'rate_limited' };
-      return { error: e.message };
     }
 
     if (!json || json.success === false) {
@@ -228,6 +260,8 @@
     .csli-badge.loading { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; cursor: default; }
     .csli-badge.loading:hover { background: rgba(120,120,120,0.15); }
     .csli-badge.error { background: rgba(248,113,113,0.15); color: #f87171; cursor: default; }
+    .csli-badge.empty { background: rgba(120,120,120,0.12); color: #999; font-weight: 400; cursor: default; }
+    .csli-badge.empty:hover { background: rgba(120,120,120,0.12); }
     .csli-badge .csli-count { opacity: 0.65; margin-left: 4px; font-weight: 400; }
 
     .csli-inv-popup {
@@ -393,22 +427,19 @@
   }
 
   // === Badge inject ===
-  // Cybershoke modes render nicks differently:
-  //   - guest: <td> with avatar img + text
-  //   - logged-in: nick is a clickable <a href="/<steamid>">
-  //   - some modes wrap nick in <span> or <div>
-  // Search broadly with normalized matching.
+  // Strategy:
+  //   1. Primary: find <a href*="/profile/<steamid64>"> (works for logged-in users, robust against truncated nicks)
+  //   2. Fallback: text matching (for guest mode without nick links)
+  //   3. When matched element is <a>, insert badge AFTER it (as sibling) so click on badge
+  //      doesn't trigger profile navigation.
   function normWhitespace(s) {
     return (s || '').replace(/\s+/g, ' ').trim();
   }
-  function injectBadge(modal, nick) {
+  function findByText(modal, nick) {
     const target = normWhitespace(nick);
-    // Try widest selector first.
-    // Cybershoke modes use a mix: <th> for player rows, <a> for nick links (logged-in), <td>/<div>/<span> otherwise.
     const candidates = modal.querySelectorAll('th, td, div, span, a, p, button, li');
     let bestMatch = null;
     for (const el of candidates) {
-      // Own text (text children only, ignores descendants)
       const ownText = normWhitespace(
         Array.from(el.childNodes)
           .filter(n => n.nodeType === 3)
@@ -416,26 +447,35 @@
           .join('')
       );
       const fullText = normWhitespace(el.textContent);
-      if (ownText === target) {
-        // Prefer leaf-ish (only own text matches) — return immediately
-        bestMatch = el;
-        break;
-      }
-      // Fallback: full text matches and element is small enough to be a leaf-ish nick container
-      if (!bestMatch && fullText === target && fullText.length < 64) {
-        bestMatch = el;
-      }
+      if (ownText === target) { bestMatch = el; break; }
+      if (!bestMatch && fullText === target && fullText.length < 64) bestMatch = el;
     }
-    if (!bestMatch) {
-      log('[badge] could not find DOM element for nick:', JSON.stringify(nick));
+    return bestMatch;
+  }
+  function injectBadge(modal, steamid64, nick) {
+    // Primary: look up by SteamID via href. Reliable even when nick is truncated by Cybershoke UI.
+    const linkSelector = 'a[href*="/profile/' + steamid64 + '"]';
+    let target = modal.querySelector(linkSelector);
+    if (!target) target = findByText(modal, nick);
+    if (!target) {
+      log('[badge] could not find DOM element for steamid', steamid64, 'nick', JSON.stringify(nick));
       return null;
     }
-    let b = bestMatch.querySelector('.csli-badge');
+    // If target is <a> (link to profile), insert badge AFTER it (as sibling in parent) —
+    // otherwise click on badge would trigger profile navigation.
+    const insertAsSibling = target.tagName === 'A' && target.parentElement;
+    const parent = insertAsSibling ? target.parentElement : target;
+    // Don't duplicate
+    let b = parent.querySelector(':scope > .csli-badge');
     if (b) return b;
     b = document.createElement('span');
     b.className = 'csli-badge loading';
     b.textContent = '…';
-    bestMatch.appendChild(b);
+    if (insertAsSibling) {
+      target.insertAdjacentElement('afterend', b);
+    } else {
+      target.appendChild(b);
+    }
     return b;
   }
 
@@ -477,7 +517,7 @@
     // Initialize badges
     const badges = new Map();
     for (const p of withIds) {
-      const b = injectBadge(modal, p.name);
+      const b = injectBadge(modal, p.steamid64, p.name);
       if (b) badges.set(p.steamid64, b);
     }
 
@@ -489,7 +529,7 @@
     updatePanel({ progress: '0/' + plannedTotal + ' инвентарей загружено' });
 
     // Stats counters
-    let priced = 0, priv = 0, errs = 0;
+    let priced = 0, priv = 0, errs = 0, empty = 0;
 
     await withConcurrency(withIds, STEAM_CONCURRENCY, async (p) => {
       if (currentServerKey !== key) return; // user switched servers
@@ -497,11 +537,14 @@
       const inv = await fetchSteamInventory(p.steamid64);
       if (currentServerKey !== key) return;
       if (inv.is_private) {
-        if (b) { b.className = 'csli-badge private'; b.textContent = '🔒'; b.title = 'Инвентарь скрыт'; }
+        if (b) { b.className = 'csli-badge private'; b.textContent = '🔒'; b.title = 'Инвентарь скрыт'; b.onclick = null; }
         priv++;
       } else if (inv.error) {
-        if (b) { b.className = 'csli-badge error'; b.textContent = '!'; b.title = inv.error; }
+        if (b) { b.className = 'csli-badge error'; b.textContent = '!'; b.title = inv.error; b.onclick = null; }
         errs++;
+      } else if (!inv.items || inv.items.length === 0) {
+        if (b) { b.className = 'csli-badge empty'; b.textContent = '📭 пусто'; b.title = 'Инвентарь пуст'; b.onclick = null; }
+        empty++;
       } else {
         const data = priceItems(inv.items, prices);
         if (b) {
@@ -512,6 +555,9 @@
           b._csliData = data;
           b._csliNick = p.name;
           b.onclick = (e) => {
+            // preventDefault + stopPropagation: badge is sibling of <a> now (see injectBadge),
+            // but still guard against any bubble-up that could trigger navigation.
+            e.preventDefault();
             e.stopPropagation();
             openPopup(b, p.name, data);
           };
@@ -522,7 +568,7 @@
       done++;
       updatePanel({
         total: totalUsd,
-        progress: done + '/' + plannedTotal + ' · ' + priced + ' 💰 · ' + priv + ' 🔒 · ' + errs + ' !',
+        progress: done + '/' + plannedTotal + ' · ' + priced + ' 💰 · ' + empty + ' 📭 · ' + priv + ' 🔒 · ' + errs + ' !',
       });
     });
 
@@ -558,6 +604,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.4.4 ready.');
+  log('Cybershoke Inventory Live v0.4.5 ready.');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
