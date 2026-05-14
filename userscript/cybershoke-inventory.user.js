@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.3.0
+// @version      0.3.1
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -24,6 +24,17 @@
   const STEAM_CONCURRENCY = 3;
 
   const log = (...a) => console.log('%c[csli]', 'color:#ff5722;font-weight:bold', ...a);
+
+  // Expose cache-clear helper to DevTools
+  const clearCache = () => {
+    let n = 0;
+    for (const k of Object.keys(localStorage)) {
+      if (k.startsWith('csli_')) { localStorage.removeItem(k); n++; }
+    }
+    log('Cleared ' + n + ' cache entries. Reload page to refetch.');
+  };
+  try { unsafeWindow.csliClearCache = clearCache; } catch {}
+  window.csliClearCache = clearCache;
 
   // === LocalStorage cache helpers (with TTL) ===
   function readCache(key, ttlMs) {
@@ -109,6 +120,7 @@
     try {
       json = await gmFetchJSON(url);
     } catch (e) {
+      log('[steam ' + steamid64 + '] http error', e.status || '?', e.message);
       if (e.status === 401 || e.status === 403) {
         const r = { is_private: true };
         writeCache(cacheKey, r);
@@ -119,11 +131,13 @@
     }
 
     if (!json || json.success === false) {
+      log('[steam ' + steamid64 + '] success=false → private');
       const r = { is_private: true };
       writeCache(cacheKey, r);
       return r;
     }
     if (!Array.isArray(json.descriptions)) {
+      log('[steam ' + steamid64 + '] no descriptions array — empty inventory');
       const r = { is_private: false, items: [] };
       writeCache(cacheKey, r);
       return r;
@@ -141,6 +155,7 @@
       if (name) items.push(name);
     }
     const result = { is_private: false, items };
+    log('[steam ' + steamid64 + '] OK — ' + items.length + ' items');
     writeCache(cacheKey, result);
     return result;
   }
@@ -364,5 +379,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.3.0 ready (all-client architecture).');
+  log('Cybershoke Inventory Live v0.3.1 ready.');
+  log('Commands: csliClearCache() · csliSetBackend(url) (backend deprecated in v0.3.x)');
 })();
