@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.1.1
+// @version      0.2.0
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -16,23 +16,19 @@
   'use strict';
 
   // === CONFIG ===
-  // Change this to your deployed Vercel URL after `vercel deploy --prod`.
-  // For local dev: 'http://localhost:3000'
   const BACKEND_URL = localStorage.getItem('csli_backend') || 'http://localhost:3000';
 
   const log = (...a) => console.log('%c[csli]', 'color:#ff5722;font-weight:bold', ...a);
 
-  // Allow user to override backend URL from DevTools Console: csliSetBackend('https://...')
-  // unsafeWindow exposes us to the page's main world so DevTools can see the function.
+  // Expose setter so user can change backend URL from DevTools
   const setBackend = (url) => {
     localStorage.setItem('csli_backend', url);
     log('Backend URL set:', url, '— reload page to apply');
   };
   try { unsafeWindow.csliSetBackend = setBackend; } catch {}
-  // Also keep on sandbox window for safety
   window.csliSetBackend = setBackend;
 
-  // === Styles for inserted UI ===
+  // === Inserted styles ===
   const style = document.createElement('style');
   style.textContent = `
     .csli-badge {
@@ -66,16 +62,12 @@
       min-width: 220px;
     }
     .csli-total-panel .csli-label {
-      font-size: 11px;
-      color: #8a93a0;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 11px; color: #8a93a0;
+      text-transform: uppercase; letter-spacing: 0.06em;
       margin-bottom: 4px;
     }
     .csli-total-panel .csli-value {
-      font-size: 22px;
-      font-weight: 600;
-      color: #ff5722;
+      font-size: 22px; font-weight: 600; color: #ff5722;
       font-variant-numeric: tabular-nums;
     }
     .csli-total-panel .csli-progress { font-size: 11px; color: #8a93a0; margin-top: 2px; }
@@ -89,11 +81,10 @@
   document.head.appendChild(style);
 
   // === State ===
-  let currentServer = null; // { ip, port } of last opened
-  let totalUsd = 0;
+  let currentServerKey = null;
   let panel = null;
 
-  // === Backend call via GM_xmlhttpRequest (bypasses CORS issues) ===
+  // === Backend call via GM_xmlhttpRequest (bypasses CORS) ===
   function postBatch(steamids) {
     return new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
@@ -107,10 +98,10 @@
             try { resolve(JSON.parse(r.responseText)); }
             catch (e) { reject(new Error('Bad JSON: ' + e.message)); }
           } else {
-            reject(new Error(`HTTP ${r.status}: ${r.responseText?.slice(0, 200)}`));
+            reject(new Error('HTTP ' + r.status + ': ' + (r.responseText || '').slice(0, 200)));
           }
         },
-        onerror: () => reject(new Error('Network error reaching backend ' + BACKEND_URL)),
+        onerror: () => reject(new Error('Network error reaching ' + BACKEND_URL)),
         ontimeout: () => reject(new Error('Backend timeout')),
       });
     });
@@ -121,41 +112,43 @@
     if (panel) return;
     panel = document.createElement('div');
     panel.className = 'csli-total-panel';
-    panel.innerHTML = `
-      <button class="csli-close" title="Скрыть">×</button>
-      <div class="csli-label">Сумма инвентарей сервера</div>
-      <div class="csli-value" data-role="total">—</div>
-      <div class="csli-progress" data-role="progress"></div>
-    `;
+    panel.innerHTML =
+      '<button class="csli-close" title="Скрыть">×</button>' +
+      '<div class="csli-label">Сумма инвентарей сервера</div>' +
+      '<div class="csli-value" data-role="total">—</div>' +
+      '<div class="csli-progress" data-role="progress"></div>';
     panel.querySelector('.csli-close').onclick = () => { panel.remove(); panel = null; };
     document.body.appendChild(panel);
   }
-  function updatePanel({ total, progress }) {
+  function updatePanel(opts) {
     if (!panel) showPanel();
-    if (total != null) panel.querySelector('[data-role="total"]').textContent = '$' + total.toFixed(2);
-    if (progress != null) panel.querySelector('[data-role="progress"]').textContent = progress;
+    if (opts.total != null) panel.querySelector('[data-role="total"]').textContent = '$' + opts.total.toFixed(2);
+    if (opts.progress != null) panel.querySelector('[data-role="progress"]').textContent = opts.progress;
+  }
+  function hidePanel() {
+    if (panel) { panel.remove(); panel = null; }
   }
 
-  // === Probe Cybershoke API: get current server players ===
+  // === Fetch player list (same-origin, uses your Cybershoke session cookies) ===
   async function fetchServerPlayers(ip, port) {
     const r = await fetch('/api/servers/data', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `ip=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}`,
+      body: 'ip=' + encodeURIComponent(ip) + '&port=' + encodeURIComponent(port),
     });
     if (!r.ok) throw new Error('Cybershoke /api/servers/data: ' + r.status);
     const j = await r.json();
     return j.playersv2 || [];
   }
 
-  // === Main: when a server modal opens, find IP:port, fetch players, fetch inventories ===
-  async function handleServerOpen(ip, port) {
-    if (currentServer && currentServer.ip === ip && currentServer.port === port) return;
-    currentServer = { ip, port };
-    log('Server opened:', ip + ':' + port);
+  // === Main handler when a server modal opens ===
+  async function handleServerOpen(modal, ip, port) {
+    const key = ip + ':' + port;
+    if (currentServerKey === key) return;
+    currentServerKey = key;
+    log('Server opened:', key);
 
-    totalUsd = 0;
     showPanel();
     updatePanel({ total: 0, progress: 'Загрузка игроков…' });
 
@@ -163,109 +156,122 @@
     try {
       players = await fetchServerPlayers(ip, port);
     } catch (e) {
+      log('fetchServerPlayers error', e);
       updatePanel({ progress: 'Ошибка: ' + e.message });
       return;
     }
     const withIds = players.filter(p => p.steamid64);
-    log(`${withIds.length}/${players.length} players have steamid64`);
+    log(withIds.length + '/' + players.length + ' players have steamid64');
 
-    if (!withIds.length) {
-      updatePanel({ progress: 'У игроков нет SteamID. Залогиньтесь на Cybershoke.' });
+    if (withIds.length === 0) {
+      updatePanel({ progress: 'Игроки без SteamID. Залогиньтесь на Cybershoke.' });
       return;
     }
 
-    // Inject loading badges next to nicks in the modal
-    const badgesByNick = new Map();
+    // Inject loading badges
+    const badges = new Map();
     for (const p of withIds) {
-      const badge = injectBadge(p.name);
-      if (badge) {
-        badge.textContent = '…';
-        badge.className = 'csli-badge loading';
-        badgesByNick.set(p.steamid64, badge);
+      const b = injectBadge(modal, p.name);
+      if (b) {
+        b.textContent = '…';
+        b.className = 'csli-badge loading';
+        badges.set(p.steamid64, b);
       }
     }
 
-    updatePanel({ progress: `Запрос инвентарей (${withIds.length})…` });
+    updatePanel({ progress: 'Запрос инвентарей (' + withIds.length + ')…' });
 
     let resp;
     try {
       resp = await postBatch(withIds.map(p => p.steamid64));
     } catch (e) {
+      log('postBatch error', e);
       updatePanel({ progress: 'Backend ошибка: ' + e.message });
       return;
     }
 
-    let priced = 0;
-    let priv = 0;
-    let errs = 0;
+    let priced = 0, priv = 0, errs = 0;
     for (const p of withIds) {
       const r = resp.results[p.steamid64];
-      const badge = badgesByNick.get(p.steamid64);
+      const b = badges.get(p.steamid64);
       if (!r) {
-        if (badge) { badge.className = 'csli-badge error'; badge.textContent = '?'; }
+        if (b) { b.className = 'csli-badge error'; b.textContent = '?'; }
         continue;
       }
       if (r.is_private) {
-        if (badge) { badge.className = 'csli-badge private'; badge.textContent = '🔒'; }
+        if (b) { b.className = 'csli-badge private'; b.textContent = '🔒'; }
         priv++;
       } else if (r.error) {
-        if (badge) { badge.className = 'csli-badge error'; badge.textContent = '!'; }
+        if (b) { b.className = 'csli-badge error'; b.textContent = '!'; }
         errs++;
       } else {
-        if (badge) { badge.className = 'csli-badge'; badge.textContent = '$' + r.total_usd.toFixed(0); }
+        if (b) { b.className = 'csli-badge'; b.textContent = '$' + r.total_usd.toFixed(0); }
         priced++;
       }
     }
 
     updatePanel({
       total: resp.total_usd || 0,
-      progress: `${priced} 💰 · ${priv} 🔒 · ${errs} ! · ${withIds.length} всего`,
+      progress: priced + ' 💰 · ' + priv + ' 🔒 · ' + errs + ' ! · ' + withIds.length + ' всего',
     });
   }
 
-  // === Insert a badge next to a player nick in the open server modal ===
-  function injectBadge(nick) {
-    const modal = document.querySelector('.modal__overlay_SERVER_MODAL');
-    if (!modal) return null;
-    // Player nicks render in TRs within the modal
-    for (const tr of modal.querySelectorAll('tr')) {
-      const cells = tr.querySelectorAll('td');
-      if (!cells.length) continue;
-      const cellText = cells[0]?.innerText?.trim() || '';
-      if (cellText === nick) {
-        // Avoid duplicate badge
-        if (cells[0].querySelector('.csli-badge')) return cells[0].querySelector('.csli-badge');
-        const badge = document.createElement('span');
+  // === Find player nick in modal table and inject badge ===
+  function injectBadge(modal, nick) {
+    for (const td of modal.querySelectorAll('td')) {
+      const text = (td.textContent || '').trim();
+      // Take the first cell whose text exactly matches the nickname
+      if (text === nick) {
+        // Avoid duplicate
+        let badge = td.querySelector('.csli-badge');
+        if (badge) return badge;
+        badge = document.createElement('span');
         badge.className = 'csli-badge loading';
         badge.textContent = '…';
-        cells[0].appendChild(badge);
+        td.appendChild(badge);
         return badge;
       }
     }
     return null;
   }
 
-  // === Detect server modal opening ===
-  // The React app doesn't expose the IP/port in DOM directly. We hook fetch
-  // to detect when /api/servers/data is POSTed and capture the body.
-  const _origFetch = window.fetch;
-  window.fetch = async function (...args) {
-    const r = await _origFetch.apply(this, args);
-    try {
-      const url = (typeof args[0] === 'string' ? args[0] : args[0]?.url) || '';
-      if (url.includes('/api/servers/data') && args[1]?.method === 'POST') {
-        const body = args[1].body || '';
-        const m = body.match(/ip=([^&]+)&port=(\d+)/);
-        if (m) {
-          const ip = decodeURIComponent(m[1]);
-          const port = m[2];
-          setTimeout(() => handleServerOpen(ip, port), 400);
-        }
+  // === Extract IP:port from modal DOM ===
+  // Modal text contains "IP 217.182.199.30:28015"
+  function extractIpPort(modal) {
+    const m = (modal.innerText || '').match(/IP\s+(\d{1,3}(?:\.\d{1,3}){3})[:\s]+(\d{1,5})/);
+    return m ? { ip: m[1], port: m[2] } : null;
+  }
+
+  // === Watch for server modal appearing/disappearing ===
+  let pendingTimer = null;
+  function checkForModal() {
+    const modal = document.querySelector('.modal__overlay_SERVER_MODAL');
+    if (!modal) {
+      if (currentServerKey) {
+        log('Server modal closed');
+        currentServerKey = null;
+        hidePanel();
       }
-    } catch {}
-    return r;
-  };
+      return;
+    }
+    // Wait briefly for IP and player list to render
+    if (pendingTimer) return;
+    pendingTimer = setTimeout(() => {
+      pendingTimer = null;
+      const ipPort = extractIpPort(modal);
+      if (!ipPort) {
+        log('Modal open but no IP found in DOM yet (will retry on next mutation)');
+        return;
+      }
+      handleServerOpen(modal, ipPort.ip, ipPort.port);
+    }, 600);
+  }
+
+  const observer = new MutationObserver(checkForModal);
+  observer.observe(document.body, { childList: true, subtree: true });
+  // Also check once on script load (in case modal is already open)
+  checkForModal();
 
   log('Cybershoke Inventory Live ready. Backend:', BACKEND_URL);
-  log('Change backend: csliSetBackend("https://your-app.vercel.app")');
+  log('Change backend: csliSetBackend("https://your-app.vercel.app") or set localStorage.csli_backend');
 })();
