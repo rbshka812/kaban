@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.5.0
+// @version      0.5.1
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -507,15 +507,13 @@
     }
     return bestMatch;
   }
+  // Returns badge element or null silently. Caller orchestrates retries.
   function injectBadge(modal, steamid64, nick) {
     // Primary: look up by SteamID via href. Reliable even when nick is truncated by Cybershoke UI.
     const linkSelector = 'a[href*="/profile/' + steamid64 + '"]';
     let target = modal.querySelector(linkSelector);
     if (!target) target = findByText(modal, nick);
-    if (!target) {
-      log('[badge] could not find DOM element for steamid', steamid64, 'nick', JSON.stringify(nick));
-      return null;
-    }
+    if (!target) return null;
     // If target is <a> (link to profile), insert badge AFTER it (as sibling in parent) —
     // otherwise click on badge would trigger profile navigation.
     const insertAsSibling = target.tagName === 'A' && target.parentElement;
@@ -532,6 +530,40 @@
       target.appendChild(b);
     }
     return b;
+  }
+
+  // Wait for Cybershoke React to render player rows, then inject badges.
+  // Initial pass + MutationObserver watching for late-rendered rows. Gives up after maxWaitMs.
+  function injectAllBadges(modal, withIds, badges, maxWaitMs = 5000) {
+    const pending = new Map(withIds.map(p => [p.steamid64, p]));
+    function tryInject(p) {
+      const b = injectBadge(modal, p.steamid64, p.name);
+      if (b) { badges.set(p.steamid64, b); pending.delete(p.steamid64); }
+    }
+    // Initial pass
+    for (const p of [...pending.values()]) tryInject(p);
+    if (pending.size === 0) return Promise.resolve();
+    log('Waiting for ' + pending.size + ' player rows to render…');
+    return new Promise((resolve) => {
+      let timeout;
+      const observer = new MutationObserver(() => {
+        for (const p of [...pending.values()]) tryInject(p);
+        if (pending.size === 0) {
+          observer.disconnect();
+          clearTimeout(timeout);
+          log('All badges injected.');
+          resolve();
+        }
+      });
+      observer.observe(modal, { childList: true, subtree: true });
+      timeout = setTimeout(() => {
+        observer.disconnect();
+        for (const p of pending.values()) {
+          log('[badge] gave up for steamid', p.steamid64, 'nick', JSON.stringify(p.name));
+        }
+        resolve();
+      }, maxWaitMs);
+    });
   }
 
   // === State ===
@@ -569,12 +601,10 @@
       return;
     }
 
-    // Initialize badges
+    // Initialize badges. Cybershoke React may still be rendering player rows —
+    // injectAllBadges waits for them via MutationObserver (up to 5s).
     const badges = new Map();
-    for (const p of withIds) {
-      const b = injectBadge(modal, p.steamid64, p.name);
-      if (b) badges.set(p.steamid64, b);
-    }
+    await injectAllBadges(modal, withIds, badges);
 
     // Wait for prices
     const prices = await pricesP;
@@ -659,6 +689,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.5.0 ready (IndexedDB cache).');
+  log('Cybershoke Inventory Live v0.5.1 ready (IndexedDB + late-render badge injection).');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
