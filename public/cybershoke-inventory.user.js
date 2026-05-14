@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.3.2
+// @version      0.4.0
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -144,16 +144,21 @@
       return r;
     }
 
+    // Build description map keyed by classid_instanceid
     const descByKey = new Map();
     for (const d of json.descriptions) {
       if (d?.market_hash_name) {
-        descByKey.set(d.classid + '_' + d.instanceid, d.market_hash_name);
+        descByKey.set(d.classid + '_' + d.instanceid, {
+          name: d.market_hash_name,
+          icon: d.icon_url || '',
+        });
       }
     }
+    // Each asset becomes an item with name + icon (duplicates kept for stacks)
     const items = [];
     for (const a of json.assets || []) {
-      const name = descByKey.get(a.classid + '_' + a.instanceid);
-      if (name) items.push(name);
+      const d = descByKey.get(a.classid + '_' + a.instanceid);
+      if (d) items.push({ name: d.name, icon: d.icon });
     }
     const result = { is_private: false, items };
     log('[steam ' + steamid64 + '] OK — ' + items.length + ' items');
@@ -161,15 +166,27 @@
     return result;
   }
 
-  // === Sum item prices ===
-  function sumItems(items, prices) {
+  // === Compute totals + sorted priced items list ===
+  function priceItems(items, prices) {
     let total = 0, counted = 0, missing = 0;
-    for (const name of items) {
-      const p = prices.get(name);
-      if (typeof p === 'number') { total += p; counted++; }
-      else missing++;
+    const priced = [];
+    for (const it of items) {
+      const p = prices.get(it.name);
+      if (typeof p === 'number') {
+        total += p; counted++;
+        priced.push({ name: it.name, icon: it.icon, price: p });
+      } else {
+        missing++;
+        priced.push({ name: it.name, icon: it.icon, price: null });
+      }
     }
-    return { total_usd: Math.round(total * 100) / 100, counted, missing };
+    priced.sort((a, b) => (b.price || 0) - (a.price || 0));
+    return {
+      total_usd: Math.round(total * 100) / 100,
+      counted,
+      missing,
+      priced,
+    };
   }
 
   // === Concurrency-limited parallel ===
@@ -188,14 +205,63 @@
   const style = document.createElement('style');
   style.textContent = `
     .csli-badge {
-      display: inline-block; padding: 1px 6px; margin-left: 6px;
+      display: inline-block; padding: 2px 8px; margin-left: 6px;
       background: rgba(255,87,34,0.15); color: #ff7043;
       border-radius: 4px; font-size: 11px; font-weight: 600;
       font-variant-numeric: tabular-nums; vertical-align: middle;
+      cursor: pointer; user-select: none; transition: background 0.12s;
     }
-    .csli-badge.private { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; }
-    .csli-badge.loading { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; }
-    .csli-badge.error { background: rgba(248,113,113,0.15); color: #f87171; }
+    .csli-badge:hover { background: rgba(255,87,34,0.3); }
+    .csli-badge.private { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; cursor: default; }
+    .csli-badge.private:hover { background: rgba(120,120,120,0.15); }
+    .csli-badge.loading { background: rgba(120,120,120,0.15); color: #888; font-weight: 400; cursor: default; }
+    .csli-badge.loading:hover { background: rgba(120,120,120,0.15); }
+    .csli-badge.error { background: rgba(248,113,113,0.15); color: #f87171; cursor: default; }
+    .csli-badge .csli-count { opacity: 0.65; margin-left: 4px; font-weight: 400; }
+
+    .csli-inv-popup {
+      position: fixed; z-index: 100000;
+      background: #15181d; border: 1px solid #ff5722; border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      padding: 14px; color: #e6e9ee; max-width: 420px; max-height: 70vh;
+      overflow-y: auto;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .csli-inv-popup h4 {
+      margin: 0 0 4px; font-size: 14px; font-weight: 600;
+      color: #ff5722;
+    }
+    .csli-inv-popup .csli-inv-sub {
+      font-size: 11px; color: #8a93a0; margin-bottom: 10px;
+    }
+    .csli-inv-popup .csli-inv-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    }
+    .csli-inv-popup .csli-inv-item {
+      background: rgba(255,255,255,0.04);
+      border-radius: 6px; padding: 6px 4px;
+      text-align: center; font-size: 10px;
+    }
+    .csli-inv-popup .csli-inv-item img {
+      width: 64px; height: 48px; object-fit: contain; display: block; margin: 0 auto 4px;
+    }
+    .csli-inv-popup .csli-inv-name {
+      color: #c0c5cd; line-height: 1.2;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; min-height: 24px;
+    }
+    .csli-inv-popup .csli-inv-price {
+      color: #ff7043; font-weight: 600; margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .csli-inv-popup .csli-inv-price.none { color: #555; font-weight: 400; }
+    .csli-inv-popup .csli-inv-close {
+      position: absolute; top: 6px; right: 10px;
+      background: transparent; border: 0; color: #8a93a0;
+      cursor: pointer; font-size: 18px; line-height: 1;
+    }
+    .csli-inv-popup .csli-inv-close:hover { color: #fff; }
+    .csli-inv-popup .csli-inv-empty { color: #8a93a0; font-style: italic; padding: 12px; text-align: center; }
     .csli-total-panel {
       position: fixed; bottom: 20px; right: 20px; z-index: 99999;
       background: #15181d; border: 1px solid #ff5722; border-radius: 8px;
@@ -242,6 +308,64 @@
   }
   function hidePanel() {
     if (panel) { panel.remove(); panel = null; }
+  }
+
+  // === Inventory popup (anchored to badge) ===
+  let popup = null;
+  function closePopup() {
+    if (popup) { popup.remove(); popup = null; document.removeEventListener('click', popupOutsideClick, true); }
+  }
+  function popupOutsideClick(e) {
+    if (popup && !popup.contains(e.target) && !e.target.classList?.contains('csli-badge')) {
+      closePopup();
+    }
+  }
+  function steamIconUrl(icon) {
+    if (!icon) return '';
+    return 'https://community.cloudflare.steamstatic.com/economy/image/' + icon + '/96fx64f';
+  }
+  function openPopup(badge, nick, data) {
+    closePopup();
+    popup = document.createElement('div');
+    popup.className = 'csli-inv-popup';
+    const items = data.priced || [];
+    const top = items.slice(0, 60); // cap to 60 to keep popup snappy
+    const itemsHtml = top.map(it => {
+      const safe = (it.name || '').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+      const priceHtml = it.price != null
+        ? '<div class="csli-inv-price">$' + it.price.toFixed(2) + '</div>'
+        : '<div class="csli-inv-price none">—</div>';
+      return '<div class="csli-inv-item">' +
+        (it.icon ? '<img loading="lazy" src="' + steamIconUrl(it.icon) + '" alt="">' : '') +
+        '<div class="csli-inv-name" title="' + safe + '">' + safe + '</div>' +
+        priceHtml +
+      '</div>';
+    }).join('');
+    const safeNick = nick.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+    popup.innerHTML =
+      '<button class="csli-inv-close" title="Закрыть">×</button>' +
+      '<h4>' + safeNick + '</h4>' +
+      '<div class="csli-inv-sub">' +
+        items.length + ' предметов · $' + data.total_usd.toFixed(2) + ' total · ' +
+        data.counted + ' с ценой · ' + data.missing + ' без цены' +
+      '</div>' +
+      (items.length ? '<div class="csli-inv-grid">' + itemsHtml + '</div>' : '<div class="csli-inv-empty">Пустой инвентарь</div>');
+    popup.querySelector('.csli-inv-close').onclick = closePopup;
+
+    // Position popup near badge
+    document.body.appendChild(popup);
+    const rect = badge.getBoundingClientRect();
+    const pw = popup.offsetWidth;
+    const ph = popup.offsetHeight;
+    let left = rect.right + 8;
+    let top_ = rect.top;
+    if (left + pw > window.innerWidth - 8) left = Math.max(8, rect.left - pw - 8);
+    if (top_ + ph > window.innerHeight - 8) top_ = Math.max(8, window.innerHeight - ph - 8);
+    popup.style.left = left + 'px';
+    popup.style.top = top_ + 'px';
+
+    // Close on outside click (defer to avoid immediate close from current click)
+    setTimeout(() => document.addEventListener('click', popupOutsideClick, true), 0);
   }
 
   // === Fetch player list from Cybershoke ===
@@ -331,15 +455,26 @@
       const inv = await fetchSteamInventory(p.steamid64);
       if (currentServerKey !== key) return;
       if (inv.is_private) {
-        if (b) { b.className = 'csli-badge private'; b.textContent = '🔒'; }
+        if (b) { b.className = 'csli-badge private'; b.textContent = '🔒'; b.title = 'Инвентарь скрыт'; }
         priv++;
       } else if (inv.error) {
         if (b) { b.className = 'csli-badge error'; b.textContent = '!'; b.title = inv.error; }
         errs++;
       } else {
-        const { total_usd } = sumItems(inv.items, prices);
-        if (b) { b.className = 'csli-badge'; b.textContent = '$' + total_usd.toFixed(0); }
-        totalUsd += total_usd;
+        const data = priceItems(inv.items, prices);
+        if (b) {
+          b.className = 'csli-badge';
+          b.innerHTML = '$' + data.total_usd.toFixed(0) + '<span class="csli-count">· ' + inv.items.length + '</span>';
+          b.title = 'Клик — показать скины';
+          // Stash data on badge for popup
+          b._csliData = data;
+          b._csliNick = p.name;
+          b.onclick = (e) => {
+            e.stopPropagation();
+            openPopup(b, p.name, data);
+          };
+        }
+        totalUsd += data.total_usd;
         priced++;
       }
       done++;
@@ -365,6 +500,7 @@
         log('Server modal closed');
         currentServerKey = null;
         hidePanel();
+        closePopup();
       }
       return;
     }
@@ -380,6 +516,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.3.2 ready.');
-  log('Commands: csliClearCache()');
+  log('Cybershoke Inventory Live v0.4.0 ready.');
+  log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
