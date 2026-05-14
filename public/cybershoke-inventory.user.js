@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.1.0
+// @version      0.1.1
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
 // @grant        GM_xmlhttpRequest
+// @grant        unsafeWindow
 // @connect      *
 // @run-at       document-idle
 // @noframes
@@ -21,11 +22,15 @@
 
   const log = (...a) => console.log('%c[csli]', 'color:#ff5722;font-weight:bold', ...a);
 
-  // Allow user to override backend URL: window.csliSetBackend('https://...')
-  window.csliSetBackend = (url) => {
+  // Allow user to override backend URL from DevTools Console: csliSetBackend('https://...')
+  // unsafeWindow exposes us to the page's main world so DevTools can see the function.
+  const setBackend = (url) => {
     localStorage.setItem('csli_backend', url);
-    log('Backend URL set:', url);
+    log('Backend URL set:', url, '— reload page to apply');
   };
+  try { unsafeWindow.csliSetBackend = setBackend; } catch {}
+  // Also keep on sandbox window for safety
+  window.csliSetBackend = setBackend;
 
   // === Styles for inserted UI ===
   const style = document.createElement('style');
