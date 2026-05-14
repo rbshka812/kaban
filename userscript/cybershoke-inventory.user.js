@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.4.3
+// @version      0.4.4
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -9,6 +9,8 @@
 // @grant        unsafeWindow
 // @connect      steamcommunity.com
 // @connect      api.skinport.com
+// @connect      kaban-dun.vercel.app
+// @connect      localhost
 // @run-at       document-idle
 // @noframes
 // ==/UserScript==
@@ -19,6 +21,8 @@
   // === CONFIG ===
   // Skinport prices are kept in memory only (too big for localStorage when combined with inventories).
   const INV_CACHE_PREFIX = 'csli_inv_v1_';
+  // Backend used as a fallback when client-side Skinport call fails (VPN/blocked IP).
+  const BACKEND_URL = localStorage.getItem('csli_backend') || 'https://kaban-dun.vercel.app';
   const INV_TTL_MS       = 60 * 60 * 1000; // 1h
   const STEAM_CONCURRENCY = 3;
 
@@ -80,21 +84,34 @@
     if (priceMap) return priceMap;
     if (priceMapLoading) return priceMapLoading;
     priceMapLoading = (async () => {
-      log('Fetching prices from Skinport…');
       const t0 = Date.now();
-      const arr = await gmFetchJSON('https://api.skinport.com/v1/items?app_id=730&currency=USD&tradable=0');
-      const m = new Map();
-      for (const item of arr) {
-        const price = item.suggested_price ?? item.mean_price ?? item.min_price;
-        if (item.market_hash_name && typeof price === 'number') {
-          m.set(item.market_hash_name, price);
+      let m;
+      try {
+        log('Fetching prices from Skinport (direct)…');
+        const arr = await gmFetchJSON('https://api.skinport.com/v1/items?app_id=730&currency=USD&tradable=0');
+        m = new Map();
+        for (const item of arr) {
+          const price = item.suggested_price ?? item.mean_price ?? item.min_price;
+          if (item.market_hash_name && typeof price === 'number') {
+            m.set(item.market_hash_name, price);
+          }
         }
+        log('Loaded ' + m.size + ' prices from Skinport in ' + (Date.now() - t0) + 'ms');
+      } catch (e) {
+        log('Skinport direct failed (' + e.message + ') — falling back to backend ' + BACKEND_URL);
+        const obj = await gmFetchJSON(BACKEND_URL + '/api/prices');
+        m = new Map();
+        const prices = obj.prices || {};
+        for (const name of Object.keys(prices)) {
+          const p = prices[name];
+          if (typeof p === 'number') m.set(name, p);
+        }
+        log('Loaded ' + m.size + ' prices from backend in ' + (Date.now() - t0) + 'ms');
       }
       // Skinport map (~636KB) too large for localStorage when combined with inventories.
-      // Keep in memory only — refetched per session, but Skinport API is fast.
+      // Keep in memory only — refetched per session.
       priceMap = m;
       priceMapLoading = null;
-      log('Loaded ' + m.size + ' prices from Skinport in ' + (Date.now() - t0) + 'ms');
       return m;
     })().catch((e) => {
       priceMapLoading = null;
@@ -541,6 +558,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.4.3 ready.');
+  log('Cybershoke Inventory Live v0.4.4 ready.');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
