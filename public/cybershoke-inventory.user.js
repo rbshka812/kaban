@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.4.2
+// @version      0.4.3
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -386,8 +386,9 @@
   }
   function injectBadge(modal, nick) {
     const target = normWhitespace(nick);
-    // Try widest selector first
-    const candidates = modal.querySelectorAll('td, div, span, a, p, button, li');
+    // Try widest selector first.
+    // Cybershoke modes use a mix: <th> for player rows, <a> for nick links (logged-in), <td>/<div>/<span> otherwise.
+    const candidates = modal.querySelectorAll('th, td, div, span, a, p, button, li');
     let bestMatch = null;
     for (const el of candidates) {
       // Own text (text children only, ignores descendants)
@@ -540,6 +541,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.4.2 ready.');
+  log('Cybershoke Inventory Live v0.4.3 ready.');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
