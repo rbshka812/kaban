@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.4.0
+// @version      0.4.1
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -17,8 +17,7 @@
   'use strict';
 
   // === CONFIG ===
-  const PRICE_CACHE_KEY  = 'csli_prices_v1';
-  const PRICE_TTL_MS     = 60 * 60 * 1000; // 1h
+  // Skinport prices are kept in memory only (too big for localStorage when combined with inventories).
   const INV_CACHE_PREFIX = 'csli_inv_v1_';
   const INV_TTL_MS       = 60 * 60 * 1000; // 1h
   const STEAM_CONCURRENCY = 3;
@@ -80,12 +79,6 @@
   async function getPriceMap() {
     if (priceMap) return priceMap;
     if (priceMapLoading) return priceMapLoading;
-    const cached = readCache(PRICE_CACHE_KEY, PRICE_TTL_MS);
-    if (cached) {
-      priceMap = new Map(cached);
-      log('Loaded ' + priceMap.size + ' prices from cache');
-      return priceMap;
-    }
     priceMapLoading = (async () => {
       log('Fetching prices from Skinport…');
       const t0 = Date.now();
@@ -97,7 +90,8 @@
           m.set(item.market_hash_name, price);
         }
       }
-      writeCache(PRICE_CACHE_KEY, [...m]);
+      // Skinport map (~636KB) too large for localStorage when combined with inventories.
+      // Keep in memory only — refetched per session, but Skinport API is fast.
       priceMap = m;
       priceMapLoading = null;
       log('Loaded ' + m.size + ' prices from Skinport in ' + (Date.now() - t0) + 'ms');
@@ -382,18 +376,29 @@
   }
 
   // === Badge inject ===
+  // Some Cybershoke modes use <td>, others use <div>/<span>. Search both, match by trimmed text.
   function injectBadge(modal, nick) {
-    for (const td of modal.querySelectorAll('td')) {
-      if ((td.textContent || '').trim() === nick) {
-        let b = td.querySelector('.csli-badge');
+    const trimNick = nick.trim();
+    const candidates = modal.querySelectorAll('td, div, span');
+    for (const el of candidates) {
+      // Avoid containers — only leaf-ish elements whose own text is the nick
+      const ownText = Array.from(el.childNodes)
+        .filter(n => n.nodeType === 3)
+        .map(n => n.textContent || '')
+        .join('')
+        .trim();
+      const fullText = (el.textContent || '').trim();
+      if (ownText === trimNick || fullText === trimNick) {
+        let b = el.querySelector('.csli-badge');
         if (b) return b;
         b = document.createElement('span');
         b.className = 'csli-badge loading';
         b.textContent = '…';
-        td.appendChild(b);
+        el.appendChild(b);
         return b;
       }
     }
+    log('[badge] could not find DOM element for nick:', JSON.stringify(nick));
     return null;
   }
 
@@ -516,6 +521,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.4.0 ready.');
+  log('Cybershoke Inventory Live v0.4.1 ready.');
   log('Клик на бейдж $XX → попап со скинами. Команды: csliClearCache()');
 })();
