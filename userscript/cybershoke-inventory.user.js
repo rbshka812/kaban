@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cybershoke Inventory Live
 // @namespace    https://github.com/cybershoke-live
-// @version      0.3.1
+// @version      0.3.2
 // @description  Показывает цены Steam-инвентарей всех игроков на сервере Cybershoke и общую сумму
 // @author       you
 // @match        https://cybershoke.net/*
@@ -115,7 +115,8 @@
     const cached = readCache(cacheKey, INV_TTL_MS);
     if (cached) return cached;
 
-    const url = 'https://steamcommunity.com/inventory/' + steamid64 + '/730/2?l=english&count=5000';
+    // Steam: count=5000 gives HTTP 400 for anonymous; 2000 works in 2026.
+    const url = 'https://steamcommunity.com/inventory/' + steamid64 + '/730/2?l=english&count=2000';
     let json;
     try {
       json = await gmFetchJSON(url);
@@ -379,6 +380,6 @@
   observer.observe(document.body, { childList: true, subtree: true });
   checkForModal();
 
-  log('Cybershoke Inventory Live v0.3.1 ready.');
-  log('Commands: csliClearCache() · csliSetBackend(url) (backend deprecated in v0.3.x)');
+  log('Cybershoke Inventory Live v0.3.2 ready.');
+  log('Commands: csliClearCache()');
 })();
